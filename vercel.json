@@ -1,0 +1,16 @@
+{
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://earthsomeweb-backend.onrender.com",
+    "NEXTAUTH_URL": "https://earthsomeweb.vercel.app",
+    "GOOGLE_CLIENT_ID": "1047332789414-hu8r7hamisalkk0842hg0e5re40kcf15.apps.googleusercontent.com",
+    "GOOGLE_CLIENT_SECRET": "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",
+    "NEXTAUTH_SECRET": "yourSuperRandomSecret123456",
+    "NEXT_PUBLIC_RAZORPAY_KEY_ID": "rzp_live_J1UPIUXZc2reGN",
+    "MONGODB_URI": "mongodb+srv://Abhishek:Abhi1207302518@earthsome.0stadtf.mongodb.net/earthsome"
+  },
+  "functions": {
+    "src/app/api/**/*.js": {
+      "maxDuration": 30
+    }
+  }
+}
