@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { v4 as uuidv4 } from "uuid";
 
 // Function to load Razorpay script
 const loadRazorpayScript = () => {
@@ -525,8 +526,77 @@ const ShippingForm = () => {
     }
   };
 
+  // const placeOrder = async (orderData) => {
+  //   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  //   try {
+  //     console.log("🛒 Placing order with data:", orderData);
+  //     console.log(
+  //       "👤 Session data:",
+  //       session ? "Authenticated" : "Not authenticated"
+  //     );
+
+  //     // Validate order data before sending
+  //     if (!orderData.cartItems || orderData.cartItems.length === 0) {
+  //       throw new Error("Cart items are required");
+  //     }
+
+  //     if (!orderData.userInfo || !orderData.userInfo.fullName) {
+  //       throw new Error("User information is required");
+  //     }
+
+  //     // Use the session data that was passed in the orderData
+  //     const isGuestOrder =
+  //       orderData.isGuestOrder !== undefined
+  //         ? orderData.isGuestOrder
+  //         : !session || !session.user;
+  //     const sessionUserData = orderData.sessionUserData || null;
+
+  //     console.log("📊 Order creation data (placeOrder):", {
+  //       isGuestOrder,
+  //       sessionUserData: sessionUserData
+  //         ? {
+  //             id: sessionUserData.id,
+  //             email: sessionUserData.email,
+  //             name: sessionUserData.name,
+  //           }
+  //         : "None",
+  //       userEmail: orderData.userInfo.email,
+  //       fromPayload: !!orderData.sessionUserData,
+  //     });
+
+  //     const response = await fetch(`${API_URL}/api/orders`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         ...orderData,
+  //         totalAmount: orderData.total,
+  //         isGuestOrder, // Use the determined isGuestOrder value
+  //         sessionUserData, // Use the prepared sessionUserData
+  //       }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (!response.ok) {
+  //       throw new Error(data.message || "Failed to create order");
+  //     }
+
+  //     console.log("Order created successfully:", data); // Debug log
+  //     return data.order;
+  //   } catch (error) {
+  //     console.error("Error placing order:", error);
+  //     throw new Error(
+  //       error.message || "Failed to create order. Please try again."
+  //     );
+  //   }
+  // };
+
   const placeOrder = async (orderData) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    console.log(API_URL);
+
     try {
       console.log("🛒 Placing order with data:", orderData);
       console.log(
@@ -534,7 +604,7 @@ const ShippingForm = () => {
         session ? "Authenticated" : "Not authenticated"
       );
 
-      // Validate order data before sending
+      // Validate order data
       if (!orderData.cartItems || orderData.cartItems.length === 0) {
         throw new Error("Cart items are required");
       }
@@ -543,15 +613,28 @@ const ShippingForm = () => {
         throw new Error("User information is required");
       }
 
-      // Use the session data that was passed in the orderData
+      // Determine if guest
       const isGuestOrder =
         orderData.isGuestOrder !== undefined
           ? orderData.isGuestOrder
           : !session || !session.user;
+
       const sessionUserData = orderData.sessionUserData || null;
+
+      // If guest, generate guestId once and store it in localStorage
+      let guestId = null;
+      if (isGuestOrder) {
+        guestId = localStorage.getItem("guestId");
+        if (!guestId) {
+          guestId = uuidv4();
+          console.log(guestId);
+          localStorage.setItem("guestId", guestId);
+        }
+      }
 
       console.log("📊 Order creation data (placeOrder):", {
         isGuestOrder,
+        guestId,
         sessionUserData: sessionUserData
           ? {
               id: sessionUserData.id,
@@ -563,6 +646,7 @@ const ShippingForm = () => {
         fromPayload: !!orderData.sessionUserData,
       });
 
+      // Send to backend
       const response = await fetch(`${API_URL}/api/orders`, {
         method: "POST",
         headers: {
@@ -571,8 +655,9 @@ const ShippingForm = () => {
         body: JSON.stringify({
           ...orderData,
           totalAmount: orderData.total,
-          isGuestOrder, // Use the determined isGuestOrder value
-          sessionUserData, // Use the prepared sessionUserData
+          isGuestOrder,
+          guestId, // 🔹 Send guestId to backend
+          sessionUserData,
         }),
       });
 
@@ -582,7 +667,7 @@ const ShippingForm = () => {
         throw new Error(data.message || "Failed to create order");
       }
 
-      console.log("Order created successfully:", data); // Debug log
+      console.log("✅ Order created successfully:", data);
       return data.order;
     } catch (error) {
       console.error("Error placing order:", error);

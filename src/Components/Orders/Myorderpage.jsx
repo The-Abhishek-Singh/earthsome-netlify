@@ -628,7 +628,6 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
       // Log table data for debugging
       console.log("Invoice Table Data:", tableData);
 
-
       // Page width & margins for centering table
       const pageWidth = doc.internal.pageSize.getWidth();
       const totalColumnWidth = 15 + 75 + 20 + 30 + 30;
@@ -1020,20 +1019,33 @@ const MyOrdersPage = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
 
-  // Fetch user's orders
   const fetchMyOrders = useCallback(async () => {
-    if (!session?.user?.email) return;
-
+    // We don't need to set loading true here, it's handled by the initial state
+    // and the effect's logic.
     try {
-      setLoading(true);
-
-      const response = await fetch(
-        `${NEXT_PUBLIC_API_URL}/api/orders/email/${encodeURIComponent(
+      let url;
+      if (status === "authenticated" && session?.user?.email) {
+        url = `${NEXT_PUBLIC_API_URL}/api/orders/email/${encodeURIComponent(
           session.user.email
-        )}`
-      );
+        )}`;
+      } else {
+        const guestId = localStorage.getItem("guestId");
+        if (!guestId) {
+          setOrders([]);
+          setLoading(false); // Make sure to stop loading if no guestId
+          return;
+        }
+        url = `${NEXT_PUBLIC_API_URL}/api/orders/guest/${guestId}`;
+      }
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        // Handle API errors more gracefully
+        throw new Error(`API responded with status: ${response.status}`);
+      }
       const data = await response.json();
-      console.log(data);
+
+      console.log("Fetched Orders:", data); // IMPORTANT: Add for debugging
 
       if (Array.isArray(data)) {
         setOrders(
@@ -1044,17 +1056,16 @@ const MyOrdersPage = () => {
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
-      setOrders([]);
+      setOrders([]); // Clear orders on error
     } finally {
-      setLoading(false);
+      setLoading(false); // This is crucial and correctly placed
     }
-  }, [session?.user?.email]);
+  }, [status, session?.user?.email]);
 
   useEffect(() => {
-    if (status === "authenticated") {
+    // Only fetch orders when the session status is determined (not 'loading')
+    if (status !== "loading") {
       fetchMyOrders();
-    } else if (status === "unauthenticated") {
-      setLoading(false);
     }
   }, [status, fetchMyOrders]);
 
@@ -1109,32 +1120,6 @@ const MyOrdersPage = () => {
       </div>
     );
   }
-
-  // Not authenticated
-  if (status === "unauthenticated") {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center bg-white p-8 rounded-2xl shadow-xl max-w-md">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Package className="w-8 h-8 text-green-600" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Sign In Required
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Please sign in to view your order history and track your
-            eco-friendly purchases.
-          </p>
-          <Link href="/login">
-            <button className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 font-medium shadow-lg">
-              Sign In to EarthSome
-            </button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

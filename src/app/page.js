@@ -23,7 +23,7 @@ const page = () => {
           <TestimonialCarousel />
         </div>
       </div>
-    </div>  
+    </div>
   );
 };
 
