@@ -19,7 +19,7 @@ const page = () => {
 
         <MarqueeSectionTailwind />
 
-        <div className="py-20 ">
+        <div className="py-20">
           <TestimonialCarousel />
         </div>
       </div>
