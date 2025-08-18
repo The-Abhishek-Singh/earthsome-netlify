@@ -11,7 +11,7 @@ import {
   Loader2,
 } from "lucide-react";
 
-export default function ContactPage() {
+export default function ContactPage() { 
   const [formData, setFormData] = useState({
     name: "",
     email: "",

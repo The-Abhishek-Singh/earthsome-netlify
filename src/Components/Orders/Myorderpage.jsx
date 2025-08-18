@@ -1028,6 +1028,7 @@ const MyOrdersPage = () => {
         url = `${NEXT_PUBLIC_API_URL}/api/orders/email/${encodeURIComponent(
           session.user.email
         )}`;
+        console.log(url);
       } else {
         const guestId = localStorage.getItem("guestId");
         if (!guestId) {
@@ -1036,6 +1037,7 @@ const MyOrdersPage = () => {
           return;
         }
         url = `${NEXT_PUBLIC_API_URL}/api/orders/guest/${guestId}`;
+        console.log(url);
       }
 
       const response = await fetch(url);
