@@ -1165,13 +1165,13 @@ const MyOrdersPage = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={fetchMyOrders}
-                className="flex items-center gap-2 bg-white text-green-600 px-6 py-3 rounded-xl hover:bg-green-50 transition-all duration-300 font-medium shadow-lg border border-green-200"
+                className="flex items-center gap-2 bg-white text-green-600 px-6 py-5 rounded-xl hover:bg-green-50 transition-all duration-300 font-medium shadow-lg border border-green-200"
               >
                 <RefreshCw size={18} />
                 Refresh
               </button>
-              <div className="bg-white px-4 py-3 rounded-xl shadow-lg border border-gray-200">
-                <div className="text-sm text-gray-500">Total Orders</div>
+              <div className="bg-white px-6 py-2 rounded-xl shadow-lg border border-gray-200 ">
+                <div className="text-sm text-gray-500 h-4 ">Total Orders</div>
                 <div className="text-2xl font-bold text-green-600">
                   {filteredOrders.length}
                 </div>
@@ -1416,9 +1416,11 @@ const MyOrdersPage = () => {
                 </button>
               ) : (
                 <div className="space-y-4">
+                  <Link href='/all-product'>
                   <button className="w-full px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 font-medium shadow-lg">
                     🌱 Start Shopping Now
                   </button>
+                  </Link>
                   <p className="text-sm text-gray-500">
                     Join thousands of customers making sustainable choices
                   </p>

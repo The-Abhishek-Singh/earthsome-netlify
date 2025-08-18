@@ -3,10 +3,15 @@ import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { MongoClient } from "mongodb";
 
-const adminEmails = ["abhi120730@gmail.com", "mihirgomugomu911@gmail.com","kunalverma8055@gmail.com"];
+const adminEmails = [
+  "abhi120730@gmail.com",
+  "mihirgomugomu911@gmail.com",
+  "kunalverma8055@gmail.com",
+];
 
 // MongoDB connection for NextAuth
-const MONGODB_URI = "mongodb+srv://Abhishek:Abhi1207302518@earthsome.0stadtf.mongodb.net/earthsome";
+const MONGODB_URI =
+  "mongodb+srv://Abhishek:Abhi1207302518@earthsome.0stadtf.mongodb.net/earthsome";
 const client = new MongoClient(MONGODB_URI);
 const clientPromise = client.connect();
 

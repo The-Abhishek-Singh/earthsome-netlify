@@ -807,11 +807,50 @@ const AdminOrdersPage = () => {
   }, [fetchOrders]);
 
   // Update order status
+  // const updateOrderStatus = async (
+  //   orderId,
+  //   newStatus,
+  //   statusType = "orderStatus"
+  // ) => {
+  //   try {
+  //     setUpdating((prev) => ({ ...prev, [orderId]: true }));
+
+  //     const updateData = {};
+  //     updateData[statusType] = newStatus;
+
+  //     const response = await fetch(
+  //       `${NEXT_PUBLIC_API_URL}/api/orders/${orderId}/status`,
+  //       {
+  //         method: "PUT",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(updateData),
+  //       }
+  //     );
+
+  //     if (response.ok) {
+  //       await fetchOrders();
+  //     } else {
+  //       throw new Error("Failed to update order status");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating order status:", error);
+  //     alert("Failed to update order status");
+  //   } finally {
+  //     setUpdating((prev) => ({ ...prev, [orderId]: false }));
+  //   }
+  // };
+
+  // Update order status
   const updateOrderStatus = async (
     orderId,
     newStatus,
     statusType = "orderStatus"
   ) => {
+    const oldOrder = orders.find((o) => o._id === orderId);
+    const oldStatus = oldOrder ? oldOrder[statusType] : null;
+
     try {
       setUpdating((prev) => ({ ...prev, [orderId]: true }));
 
@@ -830,7 +869,58 @@ const AdminOrdersPage = () => {
       );
 
       if (response.ok) {
-        await fetchOrders();
+        await fetchOrders(); // If order status has changed, call the appropriate email API
+
+        if (statusType === "orderStatus" && newStatus !== oldStatus) {
+          const updatedOrder = { ...oldOrder, [statusType]: newStatus };
+          const userEmailData = {
+            user: updatedOrder.userId || {
+              email: updatedOrder.shippingAddress.email,
+              name: updatedOrder.shippingAddress.fullName,
+            },
+            order: {
+              ...updatedOrder,
+              orderId: getOrderId(updatedOrder),
+            },
+          };
+
+          let emailEndpoint = "";
+          switch (newStatus) {
+            case "confirmed":
+              emailEndpoint = "order-confirmed";
+              break;
+            case "shipped":
+              emailEndpoint = "order-shipped";
+              break;
+            case "delivered":
+              emailEndpoint = "order-delivered";
+              break;
+            case "cancelled":
+              emailEndpoint = "order-cancelled";
+              break;
+            default:
+              break;
+          }
+
+          if (emailEndpoint) {
+            const emailResponse = await fetch(
+              `${NEXT_PUBLIC_API_URL}/api/emails/${emailEndpoint}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(userEmailData),
+              }
+            );
+
+            if (emailResponse.ok) {
+              console.log(`Email for status '${newStatus}' sent successfully.`);
+            } else {
+              console.error(`Failed to send email for status '${newStatus}'.`);
+            }
+          }
+        }
       } else {
         throw new Error("Failed to update order status");
       }
