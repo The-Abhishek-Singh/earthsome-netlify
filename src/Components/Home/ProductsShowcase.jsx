@@ -517,11 +517,11 @@ const ProductsShowcase = () => {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-8">
             {products.slice(0, 8).map((product) => (
               <div
                 key={product._id}
-                className="group relative bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-green-500/10 transition-all duration-500 overflow-hidden cursor-pointer transform hover:-translate-y-2"
+                className="group relative bg-white rounded-2xl md:rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-green-500/10 transition-all duration-500 overflow-hidden cursor-pointer transform hover:-translate-y-2"
                 onMouseEnter={() => setHoveredProduct(product._id)}
                 onMouseLeave={() => setHoveredProduct(null)}
                 onClick={() => router.push(`/products/${product._id}`)}
@@ -560,13 +560,13 @@ const ProductsShowcase = () => {
                   <img
                     src={product.productImageURL}
                     alt={product.productName}
-                    className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-44 md:h-72 object-contain md:object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                   {/* Add to Cart Button */}
                   <div
-                    className={`absolute inset-x-4 bottom-4 transform transition-all duration-300 ${
+                    className={`hidden md:block absolute inset-x-4 bottom-4 transform transition-all duration-300 ${
                       hoveredProduct === product._id
                         ? "translate-y-0 opacity-100"
                         : "translate-y-4 opacity-0"
@@ -600,17 +600,17 @@ const ProductsShowcase = () => {
                 <div className="p-6">
                   {product.category && (
                     <div className="mb-3">
-                      <span className="text-sm text-green-600 font-semibold uppercase tracking-wide bg-green-50 px-2 py-1 rounded-lg">
+                      <span className="text-sm text-green-600 font-semibold uppercase tracking-wide bg-green-50 md:px-2 md:py-1 rounded-lg">
                         {product.category}
                       </span>
                     </div>
                   )}
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-200 leading-snug">
+                  <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-200 leading-snug">
                     {product.productName}
                   </h3>
 
                   {product.rating && (
-                    <div className="flex items-center gap-2 mb-4">
+                    <div className=" hidden md:bloack items-center gap-2 mb-4">
                       <div className="flex items-center bg-yellow-50 px-2 py-1 rounded-lg">
                         <Star
                           size={16}
@@ -629,12 +629,12 @@ const ProductsShowcase = () => {
                   )}
 
                   <div className="flex items-center gap-3 flex-wrap">
-                    <span className="text-2xl font-bold text-gray-900">
+                    <span className="text-lg md:text-2xl font-bold text-gray-900">
                       ₹{product.price}
                     </span>
                     {product.originalPrice && (
                       <>
-                        <span className="text-lg text-gray-500 line-through">
+                        <span className="text-sm md:text-lg text-gray-500 line-through">
                           ₹{product.originalPrice}
                         </span>
                         {product.originalPrice - product.price > 0 && (

@@ -196,7 +196,7 @@ export default function ProductDetailPage() {
   const allImages = [product.productImageURL, ...(product.images || [])];
 
   return (
-    <div className="min-h-screen bg-white mb-[481px] ">
+    <div  id="product-page-top" className="min-h-screen bg-white mb-[481px] ">
       {/* Toast Notification */}
       {toast && (
         <Toast

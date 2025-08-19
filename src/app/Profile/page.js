@@ -1060,6 +1060,10 @@
 // };
 
 // export default ProfilePage;
+
+
+
+
 "use client";
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
@@ -1615,7 +1619,7 @@ const ProfilePage = () => {
               className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
             >
               <LogOut className="w-4 h-4" />
-              Logout
+              Logout  
             </button>
           </div>
         </div>
@@ -1720,7 +1724,7 @@ const ProfilePage = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="space-y-4">
+                    {/* <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-black mb-2">
                           Phone Number
@@ -1765,7 +1769,7 @@ const ProfilePage = () => {
                           </p>
                         )}
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                   {isEditing && (
                     <div className="flex justify-end">

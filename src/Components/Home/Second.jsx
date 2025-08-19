@@ -131,7 +131,7 @@
 //           </div>
 //         </div>
 
-//         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+//         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
 //           {categories.map((item, index) => (
 //             <Link
 //               key={index}
@@ -142,11 +142,11 @@
 //                 <img
 //                   src={item.image}
 //                   alt={item.name}
-//                   className="w-full h-52 object-cover group-hover:scale-110 transition-transform duration-500"
+//                   className="w-full h-40 md:h-52 object-cover group-hover:scale-110 transition-transform duration-500"
 //                 />
 //                 <div className="absolute inset-0 bg-gradient-to-t from-green-600/0 to-green-600/0 group-hover:from-green-600/20 group-hover:to-transparent transition-all duration-300"></div>
 //               </div>
-//               <div className="p-6 text-center relative">
+//               <div className="py-4 px-2 lg:p-6 text-center relative">
 //                 <h2 className="text-gray-800 font-semibold text-lg group-hover:text-green-600 transition-colors">
 //                   {item.name}
 //                 </h2>
@@ -166,7 +166,7 @@
 //   const [products, setProducts] = useState([]);
 //   const [loading, setLoading] = useState(true);
 //   const [hoveredProduct, setHoveredProduct] = useState(null);
-//   const [favorites, setFavorites] = new Set();
+//   const [favorites, setFavorites] = useState(new Set()); // Corrected Initialization
 //   const [toast, setToast] = useState(null);
 //   const [addingToCart, setAddingToCart] = useState(null);
 //   const { addToCart } = useCart();
@@ -256,10 +256,10 @@
 //     }
 //   };
 
-//   const displayedProducts = products.slice(0, 16);
+//   const displayedProducts = products.slice(0, 8);
 
 //   return (
-//     <div className="w-full bg-gradient-to-br from-green-50 to-white py-16 px-4">
+//     <div className=" bg-gradient-to-br from-green-50 to-white py-16 px-4 flex flex-col justify-center items-center">
 //       {/* Toast Notification */}
 //       {toast && (
 //         <Toast
@@ -280,7 +280,7 @@
 //           {products.length > 16 && (
 //             <button
 //               className="text-green-600 hover:text-green-800 transition-colors font-medium border-b border-green-300 hover:border-green-500"
-//               onClick={() => router.push("/products/bestsellers")}
+//               onClick={() => router.push("/bestsellers")}
 //             >
 //               See all products →
 //             </button>
@@ -298,7 +298,7 @@
 //             <p className="text-xl">No Best Sellers Found</p>
 //           </div>
 //         ) : (
-//           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+//           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-8">
 //             {displayedProducts.map((product) => (
 //               <div
 //                 key={product._id}
@@ -333,7 +333,7 @@
 //                   <img
 //                     src={product.productImageURL}
 //                     alt={product.productName}
-//                     className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+//                     className="w-full h-32 md:h-64 object-contain group-hover:scale-105 transition-transform duration-300"
 //                   />
 //                   {product.badge && (
 //                     <span
@@ -358,7 +358,7 @@
 //                 {/* Product Details */}
 //                 <div className="p-6 relative z-20">
 //                   <div className="mb-3">
-//                     <span className="text-2xl font-bold text-green-600">
+//                     <span className="text-lg md:text-2xl font-bold text-green-600">
 //                       ₹{product.price}
 //                     </span>
 //                     {product.originalPrice && (
@@ -368,7 +368,7 @@
 //                     )}
 //                   </div>
 
-//                   <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-green-700 transition-colors line-clamp-2">
+//                   <h3 className="text-sm md:text-lg font-semibold text-gray-800 mb-3 group-hover:text-green-700 transition-colors line-clamp-2">
 //                     {product.productName}
 //                   </h3>
 
@@ -407,10 +407,19 @@
 //           </div>
 //         )}
 //       </div>
+//       <div className="text-center mt-16">
+//         <button
+//           onClick={() => router.push("/bestsellers")}
+//           className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-10 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-500/50"
+//         >
+//           View All Products
+//         </button>
+//       </div>
 //     </div>
 //   );
 // };
 
+// A single file to include the entire component logic for easy copy-paste.
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -544,7 +553,7 @@ const ShopByCategory = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
           {categories.map((item, index) => (
             <Link
               key={index}
@@ -555,11 +564,11 @@ const ShopByCategory = () => {
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-full h-52 object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-40 md:h-52 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-green-600/0 to-green-600/0 group-hover:from-green-600/20 group-hover:to-transparent transition-all duration-300"></div>
               </div>
-              <div className="p-6 text-center relative">
+              <div className="py-4 px-2 lg:p-6 text-center relative">
                 <h2 className="text-gray-800 font-semibold text-lg group-hover:text-green-600 transition-colors">
                   {item.name}
                 </h2>
@@ -711,14 +720,20 @@ const BestSellers = () => {
             <p className="text-xl">No Best Sellers Found</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-8">
             {displayedProducts.map((product) => (
               <div
                 key={product._id}
                 className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-green-100 transition-all duration-300 cursor-pointer hover:-translate-y-2 relative"
                 onMouseEnter={() => setHoveredProduct(product._id)}
                 onMouseLeave={() => setHoveredProduct(null)}
-                onClick={() => router.push(`/products/${product._id}`)}
+                // onClick={() => {
+                //   router.push(`/products/${product._id}`);
+                //   window.scrollTo({ top: 0, behavior: "smooth" });
+                // }}
+                onClick={() => {
+                  router.push(`/products/${product._id}`);
+                }}
               >
                 {/* Gradient overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-green-50/0 to-green-50/0 group-hover:from-green-50/20 group-hover:to-transparent transition-all duration-300 rounded-2xl z-10"></div>
@@ -746,7 +761,7 @@ const BestSellers = () => {
                   <img
                     src={product.productImageURL}
                     alt={product.productName}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-32 md:h-64 object-contain md:object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   {product.badge && (
                     <span
@@ -769,35 +784,39 @@ const BestSellers = () => {
                 </div>
 
                 {/* Product Details */}
-                <div className="p-6 relative z-20">
-                  <div className="mb-3">
-                    <span className="text-2xl font-bold text-green-600">
-                      ₹{product.price}
-                    </span>
-                    {product.originalPrice && (
-                      <span className="ml-2 text-sm text-gray-500 line-through">
-                        ₹{product.originalPrice}
+                <div className="p-4 relative z-20">
+                  <div className="mb-2 flex items-center justify-between">
+                    <div>
+                      <span className="text-xl md:text-2xl font-bold text-green-600">
+                        ₹{product.price}
                       </span>
-                    )}
+                      {product.originalPrice && (
+                        <span className="ml-2 text-sm text-gray-500 line-through">
+                          ₹{product.originalPrice}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-green-700 transition-colors line-clamp-2">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-1 group-hover:text-green-700 transition-colors line-clamp-2">
                     {product.productName}
                   </h3>
 
-                  <div className="mb-3">
-                    <StarRating
-                      rating={product.rating || 4}
-                      reviews={product.reviewsCount || 0}
-                    />
+                  {/* Rating and description hidden on small screens */}
+                  <div className="hidden md:block">
+                    <div className="mb-3">
+                      <StarRating
+                        rating={product.rating || 4}
+                        reviews={product.reviewsCount || 0}
+                      />
+                    </div>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      {product.description}
+                    </p>
                   </div>
 
-                  <p className="text-gray-600 text-sm mb-6 line-clamp-2">
-                    {product.description}
-                  </p>
-
                   <button
-                    className={`w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-6 rounded-full transition-all duration-300 font-semibold transform hover:scale-105 shadow-lg hover:shadow-xl ${
+                    className={`hidden sm:block w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white md:py-3 md:px-6 rounded-full transition-all duration-300 font-semibold transform hover:scale-105 shadow-lg hover:shadow-xl ${
                       addingToCart === product._id
                         ? "from-green-700 to-green-800 scale-95"
                         : ""

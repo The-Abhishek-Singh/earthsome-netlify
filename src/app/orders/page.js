@@ -5,7 +5,7 @@ const page = () => {
   return (
     <div className="mb-[481px]">
       {/* <AboutUsPage /> */}
-      <div className="mt-24 bg-white">
+      <div className="mt-6 sm:mt-24 bg-white">
         <MyOrdersPage />
       </div>
     </div>

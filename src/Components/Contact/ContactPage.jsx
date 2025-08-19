@@ -313,10 +313,10 @@ export default function ContactPage() {
 
               {/* Social Media Buttons */}
               <div className="flex justify-center gap-4 mt-6">
-                <button className="bg-white hover:bg-green-600 text-green-600 hover:text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+                <button className="bg-white hover:bg-green-600 text-green-600 hover:text-white px-4   sm:px-6 sm:py-3 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
                   Follow for Tips
                 </button>
-                <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+                <button className="bg-green-600 hover:bg-green-700 text-white sm:px-6 sm:py-3 px-10 py-2 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
                   Get Updates
                 </button>
               </div>
