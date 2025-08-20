@@ -309,7 +309,7 @@ export default function ContactPage() {
               <p className="text-gray-700 text-center leading-relaxed">
                 Our team looks forward to helping you on your journey to health
                 and wellness. Follow us for wellness tips & updates!
-              </p>
+              </p>  
 
               {/* Social Media Buttons */}
               <div className="flex justify-center gap-4 mt-6">

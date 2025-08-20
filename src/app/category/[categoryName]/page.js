@@ -1256,6 +1256,7 @@ const CategoryPage = () => {
               </p>
               <button
                 onClick={() => {
+                  router.push('/all-product');
                   setSearchQuery("");
                   setCurrentPage(1);
                 }}

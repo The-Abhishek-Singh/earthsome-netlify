@@ -239,7 +239,7 @@ const SearchModal = () => {
                   {searchResults.map((product) => (
                     <Link
                       key={product._id}
-                      href={`/product/${product._id}`}
+                      href={`/products/${product._id}`}
                       onClick={handleResultClick}
                       className="block p-4 rounded-xl hover:bg-white/80 transition-all duration-300 border border-gray-100 hover:border-gray-200 hover:shadow-lg group backdrop-blur-sm"
                     >

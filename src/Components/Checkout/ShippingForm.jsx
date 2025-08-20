@@ -1614,6 +1614,7 @@ import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { v4 as uuidv4 } from "uuid";
+import Image from "next/image";
 
 // Function to load Razorpay script
 const loadRazorpayScript = () => {
@@ -2270,20 +2271,15 @@ const ShippingForm = () => {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full mb-4 shadow-lg">
-            <svg
-              className="w-8 h-8 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-              />
-            </svg>
+          <div className="inline-flex items-center justify-center mb-10">
+            <Image
+            src="/logo.png"
+            alt="Earthsome Logo"
+            width={120}
+            height={50}
+            className="w-50 p-0"
+            priority
+          />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Shipping Details
