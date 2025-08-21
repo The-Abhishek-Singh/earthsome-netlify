@@ -3,9 +3,9 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="mb-[481px]">
+    <div className="mt-20 mb-[1000px] sm:mb-[700px]  lg:mb-[485px] sm:mt-28 bg-white ">
       {/* <AboutUsPage /> */}
-      <div className="mt-6 sm:mt-24 bg-white">
+      <div className="md:mb-[600px] sm:mt-24 bg-white">
         <MyOrdersPage />
       </div>
     </div>
