@@ -423,7 +423,7 @@ const Navbar = () => {
     { title: "Wellness", link: "/category/Wellness" },
     { title: "Baby Care", link: "/category/Baby%20Care" },
     { title: "Personal Care", link: "/category/Personal%20Care" },
-    { title: "All Products", link: "/all-featured" },
+    { title: "All Products", link: "/all-product" },
   ];
 
   const { cartItems } = useCart();
