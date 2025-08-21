@@ -7,7 +7,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="overflow-x-hidden mb-[482px] ">
+    <div className="overflow-x-hidden  mb-[900px] sm:mb-[700px] md:mb-[600px] lg:mb-[485px] ">
       <div className="bg-white ">
         <div>
           <Home />
