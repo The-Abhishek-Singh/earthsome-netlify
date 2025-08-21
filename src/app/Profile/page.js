@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { Truck } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
