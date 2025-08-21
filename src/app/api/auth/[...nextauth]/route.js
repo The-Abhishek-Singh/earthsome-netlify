@@ -7,6 +7,7 @@ const adminEmails = [
   "abhi120730@gmail.com",
   "mihirgomugomu911@gmail.com",
   "kunalverma8055@gmail.com",
+  "mayank@gomugomu.in",
 ];
 
 // MongoDB connection for NextAuth
