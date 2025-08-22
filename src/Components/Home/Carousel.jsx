@@ -183,34 +183,34 @@ export default function Home() {
     return translateX;
   };
 
-  // Enhanced slide scale with smooth transition effect
+  // Enhanced slide scale with smooth transition effect - no pre-scaling to avoid image cutting
   const getSlideScale = (index) => {
     const diff = Math.abs(index - currentSlide);
     const distance = Math.min(diff, slides.length - diff);
     
     if (distance === 0) {
-      // Current slide - full size with slight breathing effect
-      return isDragging ? 0.98 : 1;
+      // Current slide - full size, slightly bigger when focused
+      return isDragging ? 0.98 : 1.02;
     } else if (distance === 1) {
-      // Adjacent slides - slightly smaller, ready to scale up
-      return 0.85;
+      // Adjacent slides - full size but ready to scale up
+      return 1.0;
     } else {
-      // Other slides - much smaller
-      return 0.7;
+      // Other slides - full size
+      return 1.0;
     }
   };
 
-  // Enhanced opacity with smoother transitions
+  // Enhanced opacity with smoother transitions - better visibility for scaling effect
   const getSlideOpacity = (index) => {
     const diff = Math.abs(index - currentSlide);
     const distance = Math.min(diff, slides.length - diff);
     
     if (distance === 0) {
-      return 1; // Current slide
+      return 1; // Current slide - fully visible
     } else if (distance === 1) {
-      return 0.6; // Adjacent slides - more visible
+      return 0.4; // Adjacent slides - visible for smooth transition
     } else {
-      return 0.2; // Other slides - barely visible
+      return 0; // Other slides - hidden
     }
   };
 
