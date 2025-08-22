@@ -183,24 +183,21 @@ export default function Home() {
     return translateX;
   };
 
-  // Enhanced slide scale with smooth transition effect - no pre-scaling to avoid image cutting
+  // Fixed slide scale - current slide gets slightly bigger, others stay normal
   const getSlideScale = (index) => {
     const diff = Math.abs(index - currentSlide);
     const distance = Math.min(diff, slides.length - diff);
     
     if (distance === 0) {
-      // Current slide - full size, slightly bigger when focused
-      return isDragging ? 0.98 : 1.02;
-    } else if (distance === 1) {
-      // Adjacent slides - full size but ready to scale up
-      return 1.0;
+      // Current slide - slightly bigger for emphasis
+      return isDragging ? 1.02 : 1.05;
     } else {
-      // Other slides - full size
+      // All other slides - normal size
       return 1.0;
     }
   };
 
-  // Enhanced opacity with smoother transitions - better visibility for scaling effect
+  // Enhanced opacity with smoother transitions
   const getSlideOpacity = (index) => {
     const diff = Math.abs(index - currentSlide);
     const distance = Math.min(diff, slides.length - diff);
@@ -208,7 +205,7 @@ export default function Home() {
     if (distance === 0) {
       return 1; // Current slide - fully visible
     } else if (distance === 1) {
-      return 0.4; // Adjacent slides - visible for smooth transition
+      return 0.1; // Adjacent slides - visible for smooth transition
     } else {
       return 0; // Other slides - hidden
     }
@@ -251,6 +248,7 @@ export default function Home() {
             const scale = getSlideScale(index);
             const opacity = getSlideOpacity(index);
             const zIndex = getSlideZIndex(index);
+            const isCurrentSlide = index === currentSlide;
             
             return (
               <div
@@ -266,13 +264,14 @@ export default function Home() {
                   transformOrigin: 'center center',
                 }}
               >
-                {/* Background image with enhanced zoom effect */}
+                {/* Background image with PROPERLY FIXED zoom effect */}
                 <div 
                   className="absolute inset-0 bg-cover bg-center"
                   style={{ 
                     backgroundImage: `url(${slide.imageUrl})`,
                     backgroundPosition: 'center',
-                    transform: index === currentSlide && !isDragging ? 'scale(1.05)' : 'scale(1)',
+                    // REVERSED LOGIC: Non-active slides zoom out slightly, active slide stays normal
+                    transform: isCurrentSlide && !isDragging ? 'scale(0.95)' : 'scale(1.1)',
                     transition: 'transform 1.2s cubic-bezier(0.23, 1, 0.32, 1)',
                   }}
                 ></div>
@@ -280,7 +279,7 @@ export default function Home() {
                 {/* Overlay gradient with subtle animation */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 z-10"
                      style={{
-                       opacity: index === currentSlide ? 1 : 0.8,
+                       opacity: isCurrentSlide ? 1 : 0.8,
                        transition: 'opacity 0.8s ease',
                      }}>
                 </div>
@@ -335,10 +334,10 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 z-30 h-1 bg-white/20">
           <div 
             className="h-full bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 transition-all duration-1000 ease-out"
-            style={{ 
-              width: `${((currentSlide + 1) / slides.length) * 100}%`,
-              boxShadow: '0 0 10px rgba(59, 130, 246, 0.5)',
-            }}
+            // style={{ 
+            //   width: `${((currentSlide + 1) / slides.length) * 100}%`,
+            //   boxShadow: '0 0 10px rgba(59, 130, 246, 0.5)',
+            // }}
           ></div>
         </div>
       </div>
