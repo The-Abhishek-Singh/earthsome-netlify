@@ -87,26 +87,32 @@ const Footer = () => {
               </h3>
               <ul className="text-black space-y-2">
                 <li>
-                  <Link href="/Policy" className="hover:text-green-700 transition-all duration-200 text-sm md:text-base relative group">
+                  <Link href="/Privacy-Policies" className="hover:text-green-700 transition-all duration-200 text-sm md:text-base relative group">
                     <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">Privacy Policy</span>
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-700 group-hover:w-full transition-all duration-200"></span>
                   </Link>
                 </li>
                 <li>
-                  <Link href="/Terms" className="hover:text-green-700 transition-all duration-200 text-sm md:text-base relative group">
+                  <Link href="/Terms-Conditions" className="hover:text-green-700 transition-all duration-200 text-sm md:text-base relative group">
                     <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">Terms & Conditions</span>
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-700 group-hover:w-full transition-all duration-200"></span>
                   </Link>
                 </li>
                 <li>
-                  <Link href="/cancel" className="hover:text-green-700 transition-all duration-200 text-sm md:text-base relative group">
+                  <Link href="/Refund-Cancellation" className="hover:text-green-700 transition-all duration-200 text-sm md:text-base relative group">
                     <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">Refund & Cancellation</span>
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-700 group-hover:w-full transition-all duration-200"></span>
                   </Link>
                 </li>
                 <li>
-                  <Link href="/shipping" className="hover:text-green-700 transition-all duration-200 text-sm md:text-base relative group">
+                  <Link href="/Delivery-Policies" className="hover:text-green-700 transition-all duration-200 text-sm md:text-base relative group">
                     <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">Delivery Policy</span>
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-700 group-hover:w-full transition-all duration-200"></span>
+                  </Link>
+                </li>
+                 <li>
+                  <Link href="/For-All" className="hover:text-green-700 transition-all duration-200 text-sm md:text-base relative group">
+                    <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">Applicable to All Categories</span>
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-700 group-hover:w-full transition-all duration-200"></span>
                   </Link>
                 </li>
