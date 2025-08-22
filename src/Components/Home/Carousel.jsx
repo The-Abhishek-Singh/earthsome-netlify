@@ -52,7 +52,7 @@ export default function Home() {
     setIsAnimating(true);
     const timer = setTimeout(() => {
       setIsAnimating(false);
-    }, 700);
+    }, 1000);
     
     return () => clearTimeout(timer);
   }, [currentSlide]);
@@ -162,6 +162,72 @@ export default function Home() {
     setCurrentSlide((currentSlide - 1 + slides.length) % slides.length);
   };
 
+  // Helper function to get slide position with smooth scaling effect
+  const getSlideTransform = (index) => {
+    const diff = index - currentSlide;
+    let translateX = diff * 100;
+    
+    // Handle wrap around for infinite loop
+    if (diff > slides.length / 2) {
+      translateX = (diff - slides.length) * 100;
+    } else if (diff < -slides.length / 2) {
+      translateX = (diff + slides.length) * 100;
+    }
+    
+    // Apply drag offset to all visible slides for smooth dragging
+    if (isDragging) {
+      const dragPercentage = (dragOffset / window.innerWidth) * 100;
+      translateX += dragPercentage;
+    }
+    
+    return translateX;
+  };
+
+  // Enhanced slide scale with smooth transition effect
+  const getSlideScale = (index) => {
+    const diff = Math.abs(index - currentSlide);
+    const distance = Math.min(diff, slides.length - diff);
+    
+    if (distance === 0) {
+      // Current slide - full size with slight breathing effect
+      return isDragging ? 0.98 : 1;
+    } else if (distance === 1) {
+      // Adjacent slides - slightly smaller, ready to scale up
+      return 0.85;
+    } else {
+      // Other slides - much smaller
+      return 0.7;
+    }
+  };
+
+  // Enhanced opacity with smoother transitions
+  const getSlideOpacity = (index) => {
+    const diff = Math.abs(index - currentSlide);
+    const distance = Math.min(diff, slides.length - diff);
+    
+    if (distance === 0) {
+      return 1; // Current slide
+    } else if (distance === 1) {
+      return 0.6; // Adjacent slides - more visible
+    } else {
+      return 0.2; // Other slides - barely visible
+    }
+  };
+
+  // Get slide z-index for proper layering
+  const getSlideZIndex = (index) => {
+    const diff = Math.abs(index - currentSlide);
+    const distance = Math.min(diff, slides.length - diff);
+    
+    if (distance === 0) {
+      return 20; // Current slide on top
+    } else if (distance === 1) {
+      return 15; // Adjacent slides
+    } else {
+      return 10; // Other slides
+    }
+  };
+
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black -mt-2 select-none">
       
@@ -178,39 +244,58 @@ export default function Home() {
         onTouchEnd={handleTouchEnd}
         style={{ touchAction: 'pan-y' }}
       >
-        {/* Slides */}
+        {/* Slides Container */}
         <div className="relative h-full w-full">
-          {slides.map((slide, index) => (
-            <div
-              key={slide.id}
-              className={`absolute inset-0 h-full w-full transition-all duration-700 ease-in-out ${
-                currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
-              }`}
-              style={{
-                transform: isDragging && currentSlide === index ? `translateX(${dragOffset}px)` : 'translateX(0px)',
-                transition: isDragging ? 'none' : 'all 0.7s ease-in-out',
-              }}
-            >
-              {/* Background image */}
-              <div 
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 ease-out"
-                style={{ 
-                  backgroundImage: `url(${slide.imageUrl})`,
-                  backgroundPosition: 'center',
-                  transform: currentSlide === index ? 'scale(1)' : 'scale(1.02)',
+          {slides.map((slide, index) => {
+            const translateX = getSlideTransform(index);
+            const scale = getSlideScale(index);
+            const opacity = getSlideOpacity(index);
+            const zIndex = getSlideZIndex(index);
+            
+            return (
+              <div
+                key={slide.id}
+                className="absolute inset-0 h-full w-full"
+                style={{
+                  transform: `translateX(${translateX}%) scale(${scale})`,
+                  opacity: opacity,
+                  zIndex: zIndex,
+                  transition: isDragging 
+                    ? 'opacity 0.3s ease, z-index 0s' 
+                    : 'all 1s cubic-bezier(0.23, 1, 0.32, 1)',
+                  transformOrigin: 'center center',
                 }}
-              ></div>
-              
-              {/* Subtle overlay gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15 z-10"></div>
-            </div>
-          ))}
+              >
+                {/* Background image with enhanced zoom effect */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ 
+                    backgroundImage: `url(${slide.imageUrl})`,
+                    backgroundPosition: 'center',
+                    transform: index === currentSlide && !isDragging ? 'scale(1.05)' : 'scale(1)',
+                    transition: 'transform 1.2s cubic-bezier(0.23, 1, 0.32, 1)',
+                  }}
+                ></div>
+                
+                {/* Overlay gradient with subtle animation */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 z-10"
+                     style={{
+                       opacity: index === currentSlide ? 1 : 0.8,
+                       transition: 'opacity 0.8s ease',
+                     }}>
+                </div>
+                
+                {/* Content overlay for better visibility of controls */}
+                <div className="absolute inset-0 bg-black/5 z-5"></div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Navigation arrows */}
+        {/* Navigation arrows with enhanced styling */}
         <button 
           onClick={goToPrevSlide}
-          className="absolute left-1 top-1/2 -translate-y-1/2 z-30 bg-white/15 hover:bg-white/25 text-white xl:ml-16 p-3 rounded-full transition-all duration-300 backdrop-blur-md border border-white/20 hover:border-white/30 hover:scale-110 active:scale-95 shadow-lg"
+          className="absolute left-1 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/30 text-white xl:ml-16 p-3 rounded-full transition-all duration-300 backdrop-blur-md border border-white/30 hover:border-white/40 hover:scale-110 active:scale-95 shadow-xl"
           aria-label="Previous slide"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
@@ -220,7 +305,7 @@ export default function Home() {
         
         <button 
           onClick={goToNextSlide}
-          className="absolute right-1 top-1/2 -translate-y-1/2 z-30 xl:mr-16 bg-white/15 hover:bg-white/25 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-md border border-white/20 hover:border-white/30 hover:scale-110 active:scale-95 shadow-lg"
+          className="absolute right-1 top-1/2 -translate-y-1/2 z-30 xl:mr-16 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-md border border-white/30 hover:border-white/40 hover:scale-110 active:scale-95 shadow-xl"
           aria-label="Next slide"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
@@ -228,16 +313,16 @@ export default function Home() {
           </svg>
         </button>
 
-        {/* Slide indicators */}
+        {/* Enhanced slide indicators */}
         <div className="absolute bottom-8 left-0 right-0 z-30 flex justify-center">
-          <div className="flex space-x-3 bg-black/20 backdrop-blur-md rounded-full px-4 py-2 border border-white/20">
+          <div className="flex space-x-3 bg-black/25 backdrop-blur-lg rounded-full px-5 py-3 border border-white/25">
             {slides.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`transition-all duration-300 rounded-full ${
+                className={`transition-all duration-500 rounded-full ${
                   currentSlide === index 
-                    ? 'bg-white w-8 h-3 shadow-lg' 
+                    ? 'bg-white w-8 h-3 shadow-lg transform scale-110' 
                     : 'bg-white/50 hover:bg-white/70 w-3 h-3 hover:scale-110'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
@@ -246,11 +331,14 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Progress bar */}
+        {/* Enhanced progress bar */}
         <div className="absolute bottom-0 left-0 right-0 z-30 h-1 bg-white/20">
           <div 
-            className="h-full bg-gradient-to-r from-green-400 to-blue-400 transition-all duration-300"
-            // style={{ width: `${((currentSlide + 1) / slides.length) * 100}%` }}
+            className="h-full bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 transition-all duration-1000 ease-out"
+            style={{ 
+              width: `${((currentSlide + 1) / slides.length) * 100}%`,
+              boxShadow: '0 0 10px rgba(59, 130, 246, 0.5)',
+            }}
           ></div>
         </div>
       </div>
