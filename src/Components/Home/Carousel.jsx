@@ -210,7 +210,7 @@ export default function Home() {
         {/* Navigation arrows */}
         <button 
           onClick={goToPrevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/15 hover:bg-white/25 text-white xl:ml-44 p-3 rounded-full transition-all duration-300 backdrop-blur-md border border-white/20 hover:border-white/30 hover:scale-110 active:scale-95 shadow-lg"
+          className="absolute left-1 top-1/2 -translate-y-1/2 z-30 bg-white/15 hover:bg-white/25 text-white xl:ml-16 p-3 rounded-full transition-all duration-300 backdrop-blur-md border border-white/20 hover:border-white/30 hover:scale-110 active:scale-95 shadow-lg"
           aria-label="Previous slide"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
@@ -220,7 +220,7 @@ export default function Home() {
         
         <button 
           onClick={goToNextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 xl:mr-44 bg-white/15 hover:bg-white/25 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-md border border-white/20 hover:border-white/30 hover:scale-110 active:scale-95 shadow-lg"
+          className="absolute right-1 top-1/2 -translate-y-1/2 z-30 xl:mr-16 bg-white/15 hover:bg-white/25 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-md border border-white/20 hover:border-white/30 hover:scale-110 active:scale-95 shadow-lg"
           aria-label="Next slide"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
