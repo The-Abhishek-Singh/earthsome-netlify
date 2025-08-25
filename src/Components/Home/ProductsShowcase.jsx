@@ -486,17 +486,17 @@ const ProductsShowcase = () => {
 
       {/* Header Section */}
       <div className="text-center mb-16">
-        <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+        {/* <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
           <Star size={16} className="text-green-600" />
           Premium Collection
-        </div>
+        </div> */}
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-          Featured Products
+          Combos 
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto text-lg leading-relaxed">
+        {/* <p className="text-gray-600 max-w-2xl mx-auto text-lg leading-relaxed">
           Discover our curated range of products crafted for healthier, glowing
           skin.
-        </p>
+        </p> */}
       </div>
 
       {loading ? (

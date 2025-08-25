@@ -1,308 +1,398 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, LogIn, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, LogOut, User } from "lucide-react";
 import SearchModal from "../UI/SearchModal";
+import { useCart } from "@/context/CartContext";
+import dynamic from "next/dynamic";
+
+// Create a client-only component for navigation links
+const NavigationLinks = dynamic(() => Promise.resolve(({ items, productDropdownItems, handleLinkClick, isMenuOpen, productDropdownOpen, setProductDropdownOpen }) => {
+  const { usePathname } = require("next/navigation");
+  const pathname = usePathname();
+
+  // Function to check if a link is active
+  const isActiveLink = (link) => {
+    if (link === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(link);
+  };
+
+  // Function to check if Products dropdown should be active
+  const isProductsActive = () => {
+    return productDropdownItems.some(item => isActiveLink(item.link)) || isActiveLink("/all-product");
+  };
+
+  return (
+    <>
+      {/* Desktop Navigation */}
+      <div className="hidden lg:flex items-center justify-center gap-9">
+        {items.map((item) =>
+          item.title === "Products" ? (
+            <div key={item.title} className="relative group">
+              <div className={`flex items-center gap-1 text-md font-medium cursor-pointer transition-colors ${
+                isProductsActive() ? "text-green-600" : "text-black group-hover:text-green-600"
+              }`}>
+                <Link href={item.link} className="py-1">
+                  {item.title}
+                </Link>
+                <ChevronDown className="w-4 h-4" />
+              </div>
+              <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-md rounded-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-300 z-50 py-1">
+                {productDropdownItems.map((subItem) => (
+                  <Link
+                    key={subItem.title}
+                    href={subItem.link}
+                    className={`block px-4 py-2 text-md hover:bg-gray-100 hover:text-green-600 ${
+                      isActiveLink(subItem.link) ? "text-green-600" : "text-gray-700"
+                    }`}
+                  >
+                    {subItem.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <Link
+              key={item.title}
+              href={item.link}
+              className={`relative py-1 text-md font-medium group transition-colors ${
+                isActiveLink(item.link) ? "text-green-600" : "text-black hover:text-green-600"
+              }`}
+            >
+              <span>{item.title}</span>
+              <span className={`absolute left-0 bottom-0 h-[2px] bg-green-500 transition-all duration-300 ${
+                isActiveLink(item.link) ? "w-full" : "w-0 group-hover:w-full"
+              }`}></span>
+            </Link>
+          )
+        )}
+      </div>
+
+      {/* Mobile Navigation */}
+      <div
+        className={`fixed inset-x-0 top-24 bg-white/95 backdrop-blur-sm border-b border-gray-200 lg:hidden transition-all duration-300 ease-in-out ${
+          isMenuOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
+        }`}
+        style={{
+          maxHeight: isMenuOpen ? "calc(100vh - 6rem)" : "0",
+          overflowY: "auto",
+        }}
+      >
+        <div className="px-4 py-2 space-y-1 mt-2 mb-4">
+          {items.map((item) =>
+            item.title === "Products" ? (
+              <div key={item.title} className="flex flex-col gap-1">
+                <div className="flex justify-between items-center w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                  <Link
+                    href={item.link}
+                    onClick={handleLinkClick}
+                    className={`text-sm font-medium flex-grow transition-colors ${
+                      isProductsActive() ? "text-green-600" : "text-black hover:text-green-600"
+                    }`}
+                  >
+                    {item.title}
+                  </Link>
+                  <button
+                    onClick={() => setProductDropdownOpen(!productDropdownOpen)}
+                    className="p-1 -mr-1"
+                  >
+                    <ChevronDown
+                      className={`w-5 h-5 transition-transform ${
+                        productDropdownOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                    />
+                  </button>
+                </div>
+                {productDropdownOpen && (
+                  <div className="ml-4 mt-1 flex flex-col gap-1 border-l-2 border-gray-200 pl-3">
+                    {productDropdownItems.map((subItem) => (
+                      <Link
+                        key={subItem.title}
+                        href={subItem.link}
+                        onClick={handleLinkClick}
+                        className={`block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors ${
+                          isActiveLink(subItem.link) ? "text-green-600" : "text-gray-700 hover:text-green-600"
+                        }`}
+                      >
+                        {subItem.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                key={item.title}
+                href={item.link}
+                onClick={handleLinkClick}
+                className={`block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors ${
+                  isActiveLink(item.link) ? "text-green-600" : "text-black hover:text-green-600"
+                }`}
+              >
+                {item.title}
+              </Link>
+            )
+          )}
+        </div>
+      </div>
+    </>
+  );
+}), { ssr: false });
 
 const Navbar = () => {
+  const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  const [productDropdownOpen, setProductDropdownOpen] = useState(false); // mobile dropdown toggle
+  const [productDropdownOpen, setProductDropdownOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      setIsVisible(scrollTop < lastScrollTop);
-      setLastScrollTop(scrollTop);
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      setIsVisible(scrollTop < lastScrollTop || scrollTop < 50);
+      setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollTop]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".profile-dropdown-container")) {
+        setProfileDropdownOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleLinkClick = () => isMenuOpen && setIsMenuOpen(false);
 
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+    setProfileDropdownOpen(false);
+  };
+
   const items = [
     { title: "Home", link: "/" },
-    { title: "About Us", link: "/about" },
-    { title: "Products", link: "/products" },
-    { title: "Contact Us", link: "/contact" },
+    { title: "About Us", link: "/About" },
+    { title: "Products", link: "/all-product" },
+    { title: "Contact Us", link: "/Contact" },
+    { title: "Orders", link: "/orders" },
   ];
 
   const productDropdownItems = [
-    { title: "Product A", link: "/products/a" },
-    { title: "Product B", link: "/products/b" },
-    { title: "Product C", link: "/products/c" },
-    { title: "Product D", link: "/products/d" },
-    { title: "Product E", link: "/products/e" },
+    { title: "Gummies", link: "/category/Gummies" },
+    { title: "Protein & Energy", link: "/category/Protein%20%26%20Energy" },
+    { title: "Wellness", link: "/category/Wellness" },
+    { title: "Baby Care", link: "/category/Baby%20Care" },
+    { title: "Personal Care", link: "/category/Personal%20Care" },
+    { title: "All Products", link: "/all-product" },
   ];
 
+  const { cartItems } = useCart();
+
+  const totalPrice = cartItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const AuthButton = () => {
+    if (status === "loading") {
+      return (
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+          <span className="text-sm font-medium hidden lg:block text-gray-400">
+            Loading...
+          </span>
+        </div>
+      );
+    }
+
+    if (!session?.user) {
+      return (
+        <Link
+          href="/Login"
+          className="flex items-center gap-2 text-black hover:text-green-600 transition-colors"
+        >
+          <div className="p-2 hover:bg-gray-100 rounded-full">
+            <User className="w-[22px] h-[22px]" />
+          </div>
+          <span className="text-md font-medium hidden lg:block">Login</span>
+        </Link>
+      );
+    }
+
+    return (
+      <div className="profile-dropdown-container relative">
+        <button
+          onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+          className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors"
+        >
+          <div className="relative">
+            {session.user.image ? (
+              <Image
+                src={session.user.image}
+                alt="Profile"
+                width={32}
+                height={32}
+                className="w-8 h-8 rounded-full border-2 border-gray-200 hover:border-green-400 transition-colors"
+                priority
+              />
+            ) : (
+              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                <User className="w-4 h-4 text-gray-600" />
+              </div>
+            )}
+          </div>
+          <span className="text-sm font-medium hidden lg:block max-w-[100px] truncate">
+            {session.user.name || session.user.email}
+          </span>
+          <ChevronDown className="w-4 h-4 hidden lg:block" />
+        </button>
+
+        {profileDropdownOpen && (
+          <div className="absolute top-full right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border border-gray-200 py-2 z-50">
+            <div className="px-4 py-2 border-b border-gray-100">
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {session.user.name}
+              </p>
+              <p className="text-xs text-gray-500 truncate">
+                {session.user.email}
+              </p>
+            </div>
+            <Link
+              href="/Profile"
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600"
+              onClick={() => setProfileDropdownOpen(false)}
+            >
+              <User className="w-4 h-4" />
+              Profile
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div   className={`w-full bg-white mb-4 mt-24 bg-opacity-90 fixed top-0 left-0 transition-all duration-300 ease-in-out z-40 ${
+    <nav
+      className={`w-full bg-white/60 backdrop-blur-md fixed top-0 left-0 transition-all duration-300 ease-in-out z-40 ${
         isVisible
           ? "opacity-100 pointer-events-auto"
           : "opacity-0 pointer-events-none delay-200"
-      }`}>
-
-{/* Upper Navigation Bar */}
-
-  <div
-      className= "fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-in-out" 
-      
-      
-    >
-      <div className="bg-white h-24 w-full border border-b-gray-400">
-        <div className="w-full px-2 md:px-4">
-          <div className="flex h-24 items-center justify-between lg:justify-around">
-            {/* Left section */}
-            <div className="flex items-center h-full w-[200px] xl:w-[250px] ">
-              <Link href="/" className="flex items-center gap-2 h-full xl:p-3">
-                <Image
-                  src="/logo.png"
-                  alt="Earthsome Logo"
-                  width={120}
-                  height={50}
-                  className="w-full p-0"
-                  priority
-                />
-              </Link>
-            </div>
-
-            {/* center section */}
-            <div className="flex items-center gap-2 md:gap-4 w-[50%] -ml-16">
-              <SearchModal />
-              <button
-                onClick={toggleMenu}
-                className="p-1 md:p-2 rounded-lg text-gray-100 lg:hidden bg-transparent border border-green-700 hover:bg-green-700 transition-colors"
-                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-              >
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
-
-
-
-            {/* Right section */}
-
-             <div className="flex items-center justify-end align-middle w-[20%] h-20">
-
-
-
-<div className="flex items-center">
-
-
-             <div>
-              <Link href="/" className="flex items-center gap-2 h-full xl:p-3">
-                <Image
-                  src="/store.png"
-                  alt="store "
-                  width={28}
-                  height={18}
-                  className="w-full p-0"
-                  priority
-                />
-              </Link>
-            </div>
-
-<div className="flex flex-col -space-y-1">
-                <h1 className="text-black text-[12px]">Picking up?</h1>
-                <h1 className="text-black ">Select Store </h1>
-
-                </div>
-           
-               </div>
-
-
-            </div>
-
-
-
-          </div>
-
-          {/* Mobile Menu */}
-          <div
-            className={`fixed inset-x-0 top-20 bg-black border-b border-gray-200 lg:hidden transition-all duration-300 ease-in-out ${
-              isMenuOpen
-                ? "opacity-100 visible"
-                : "opacity-0 invisible pointer-events-none"
-            }`}
-            style={{
-              maxHeight: isMenuOpen ? "calc(100vh - 5rem)" : "0",
-              overflow: "hidden",
-            }}
-          >
-            {/* Future mobile nav items go here */}
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-
-
- {/* LOWER Navigation Bar */}
-
-    <nav
-      className= "w-full bg-white mb-4 mt-24 bg-opacity-90 fixed top-0 left-0 transition-all duration-300 ease-in-out z-40 border-2 border-b-green-400"
+      }`}
     >
       <div className="w-full px-2 md:px-4">
-        <div className="flex h-16 items-center justify-between">
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex items-start gap-10 ml-16">
-            {items.map((item) =>
-              item.title === "Products" ? (
-                <div key={item.title} className="relative group">
-                  <button className="relative py-1 text-xs xl:text-sm font-medium text-black group-hover:text-black flex items-center gap-1">
-                    {item.title}
-                    <ChevronDown className="w-4 h-4" />
-                  </button>
-                  <div className="absolute left-0 top-full mt-1 bg-white shadow-lg rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 invisible group-hover:visible z-50">
-                    <div className="py-2 w-48">
-                      {productDropdownItems.map((subItem) => (
-                        <Link
-                          key={subItem.title}
-                          href={subItem.link}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          {subItem.title}
-                        </Link>
-                      ))}
-                    </div>
+        <div className="flex h-24 items-center justify-between lg:justify-around">
+          {/* Logo */}
+          <div className="flex items-center h-full w-[200px] xl:w-[250px]">
+            <Link href="/" className="flex items-center gap-2 h-full xl:p-3">
+              <Image
+                src="/logo.png"
+                alt="Careertronics"
+                width={120}
+                height={50}
+                className="w-full p-0"
+                priority
+              />
+            </Link>
+          </div>
+
+          {/* Center Navigation - Dynamic component */}
+          <NavigationLinks 
+            items={items}
+            productDropdownItems={productDropdownItems}
+            handleLinkClick={handleLinkClick}
+            isMenuOpen={isMenuOpen}
+            productDropdownOpen={productDropdownOpen}
+            setProductDropdownOpen={setProductDropdownOpen}
+          />
+
+          {/* Right side */}
+          <div className="flex items-center gap-2 md:gap-8">
+            <AuthButton />
+            <SearchModal />
+            <Link href="/cart" className="group">
+              <div className="relative flex items-center md:gap-2.5 bg-black hover:bg-gray-800 rounded-full transition-all duration-200 shadow-sm hover:shadow-md justify-center">
+                {/* Mobile Cart */}
+                <div className="flex md:hidden items-center px-3.5 py-2.5">
+                  <div className="relative">
+                    <Image
+                      src="/Cart_Icon.svg"
+                      alt="Cart"
+                      width={22}
+                      height={22}
+                      className="filter brightness-0 invert"
+                      priority
+                    />
+                    {totalItems > 0 && (
+                      <div className="absolute -top-2 -right-2 min-w-[20px] h-[20px] bg-green-400 text-black text-[11px] font-bold rounded-full flex items-center justify-center px-1.5 border border-black">
+                        {totalItems > 99 ? "99+" : totalItems}
+                      </div>
+                    )}
                   </div>
                 </div>
-              ) : (
-                <Link
-                  key={item.title}
-                  href={item.link}
-                  className="relative py-1 text-xs xl:text-sm font-medium text-black hover:text-black group"
-                >
-                  <span>{item.title}</span>
-                  <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-green-400 group-hover:w-full transition-all duration-300"></span>
-                </Link>
-              )
-            )}
-          </div>
-
-<div className="flex items-center justify-end w-full lg:w-auto gap-4 ml-4">
-
-
-  <button className="h-11 rounded-full w-32 border-2 border-black">
-
-<div className="flex items-center justify-between ">
-
-    <div>
-              <Link href="/" className="flex items-center  h-full xl:p-3">
-                <Image
-                  src="/user.png"
-                  alt="user "
-                  width={9}
-                  height={12}
-                  className="w-full p-0"
-                  priority
-                />
-              </Link>
-            </div>
-
-
-             <h1 className="text-black text-[15px] mr-6 font-bold">Account</h1>
-
-             </div>
-
-  </button>
-
-
-
-
-
-
-{/* SECOND BUTTON */}
-
-
-
-
-
-<Link
-  href="/cart"
-  className="h-11 rounded-full w-32 border-2 border-black bg-black flex items-center justify-center gap-2 px-3 "
->
-  <Image
-    src="/Cart_Icon.svg"
-    alt="Cart"
-    width={18}
-    height={18}
-    className="w-5 h-5"
-    priority
-  />
-  <h1 className="text-white text-[16px] font-bold">$0.00</h1>
-</Link>
-
-
-</div>
-
-
-
-        </div>
-
-        {/* Mobile Menu */}
-        <div
-          className={`fixed inset-x-0 top-20 bg-black border-b border-gray-200  lg:hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
-          }`}
-          style={{
-            maxHeight: isMenuOpen ? "calc(100vh - 5rem)" : "0",
-            overflow: "hidden",
-          }}
-        >
-          <div className="px-4 py-2 space-y-1 mt-2 mb-4">
-            {items.map((item) =>
-              item.title === "Products" ? (
-                <div key={item.title} className="flex flex-col gap-1">
-                  <button
-                    onClick={() => setProductDropdownOpen(!productDropdownOpen)}
-                    className="flex justify-between items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-100 hover:text-red-400 hover:bg-gray-900 transition-colors w-full"
-                  >
-                    {item.title}
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform ${
-                        productDropdownOpen ? "rotate-180" : "rotate-0"
-                      }`}
+                {/* Desktop Cart */}
+                <div className="hidden md:flex items-center gap-2.5 px-4 py-2.5 min-h-[44px] min-w-[100px]">
+                  <div className="relative">
+                    <Image
+                      src="/Cart_Icon.svg"
+                      alt="Cart"
+                      width={22}
+                      height={22}
+                      className="filter brightness-0 invert"
+                      priority
                     />
-                  </button>
-                  {productDropdownOpen && (
-                    <div className="ml-4 mt-1 flex flex-col gap-1">
-                      {productDropdownItems.map((subItem) => (
-                        <Link
-                          key={subItem.title}
-                          href={subItem.link}
-                          onClick={handleLinkClick}
-                          className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-red-400 hover:bg-gray-800"
-                        >
-                          {subItem.title}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                    {totalItems > 0 && (
+                      <div className="absolute -top-2 -right-2 min-w-[20px] h-5 bg-green-400 text-black text-xs font-bold rounded-full flex items-center justify-center px-1 border border-black">
+                        {totalItems > 99 ? "99+" : totalItems}
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-white text-sm font-semibold">
+                    ₹{totalPrice.toFixed(0)}
+                  </span>
                 </div>
-              ) : (
-                <Link
-                  key={item.title}
-                  href={item.link}
-                  onClick={handleLinkClick}
-                  className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-100 hover:text-red-400 hover:bg-gray-900 transition-colors"
-                >
-                  {item.title}
-                </Link>
-              )
-            )}
+              </div>
+            </Link>
+
+            {/* Hamburger */}
+            <button
+              onClick={toggleMenu}
+              className="p-1 md:p-2 rounded-lg text-green-700 lg:hidden border border-green-500 hover:bg-green-100 transition-colors"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Auth Section */}
+        {isMenuOpen && session?.user && (
+          <div className="lg:hidden border-t border-gray-200 pt-2 mt-2 px-4 pb-4">
+            <div className="flex items-center gap-3 px-3 py-2">
+              {/* Mobile auth content can go here if needed */}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
-    </div>
   );
 };
-
-export default Navbar;

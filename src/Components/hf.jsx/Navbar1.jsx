@@ -6,6 +6,144 @@ import Image from "next/image";
 import { Menu, X, ChevronDown, LogOut, User } from "lucide-react";
 import SearchModal from "../UI/SearchModal";
 import { useCart } from "@/context/CartContext";
+import dynamic from "next/dynamic";
+
+// Create a client-only component for navigation links
+const NavigationLinks = dynamic(() => Promise.resolve(({ items, productDropdownItems, handleLinkClick, isMenuOpen, productDropdownOpen, setProductDropdownOpen }) => {
+  const { usePathname } = require("next/navigation");
+  const pathname = usePathname();
+
+  // Function to check if a link is active
+  const isActiveLink = (link) => {
+    if (link === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(link);
+  };
+
+  // Function to check if Products dropdown should be active
+  const isProductsActive = () => {
+    return productDropdownItems.some(item => isActiveLink(item.link)) || isActiveLink("/all-product");
+  };
+
+  return (
+    <>
+      {/* Desktop Navigation */}
+      <div className="hidden lg:flex items-center justify-center gap-9">
+        {items.map((item) =>
+          item.title === "Products" ? (
+            <div key={item.title} className="relative group">
+              <div className={`flex items-center gap-1 text-md font-medium cursor-pointer transition-colors ${
+                isProductsActive() ? "text-green-600" : "text-black group-hover:text-green-600"
+              }`}>
+                <Link href={item.link} className="py-1">
+                  {item.title}
+                </Link>
+                <ChevronDown className="w-4 h-4" />
+              </div>
+              <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-md rounded-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-300 z-50 py-1">
+                {productDropdownItems.map((subItem) => (
+                  <Link
+                    key={subItem.title}
+                    href={subItem.link}
+                    className={`block px-4 py-2 text-md hover:bg-gray-100 hover:text-green-600 ${
+                      isActiveLink(subItem.link) ? "text-green-600" : "text-gray-700"
+                    }`}
+                  >
+                    {subItem.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <Link
+              key={item.title}
+              href={item.link}
+              className={`relative py-1 text-md font-medium group transition-colors ${
+                isActiveLink(item.link) ? "text-green-600" : "text-black hover:text-green-600"
+              }`}
+            >
+              <span>{item.title}</span>
+              <span className={`absolute left-0 bottom-0 h-[2px] bg-green-500 transition-all duration-300 ${
+                isActiveLink(item.link) ? "w-full" : "w-0 group-hover:w-full"
+              }`}></span>
+            </Link>
+          )
+        )}
+      </div>
+
+      {/* Mobile Navigation */}
+      <div
+        className={`fixed inset-x-0 top-24 bg-white/95 backdrop-blur-sm border-b border-gray-200 lg:hidden transition-all duration-300 ease-in-out ${
+          isMenuOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
+        }`}
+        style={{
+          maxHeight: isMenuOpen ? "calc(100vh - 6rem)" : "0",
+          overflowY: "auto",
+        }}
+      >
+        <div className="px-4 py-2 space-y-1 mt-2 mb-4">
+          {items.map((item) =>
+            item.title === "Products" ? (
+              <div key={item.title} className="flex flex-col gap-1">
+                <div className="flex justify-between items-center w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                  <Link
+                    href={item.link}
+                    onClick={handleLinkClick}
+                    className={`text-sm font-medium flex-grow transition-colors ${
+                      isProductsActive() ? "text-green-600" : "text-black hover:text-green-600"
+                    }`}
+                  >
+                    {item.title}
+                  </Link>
+                  <button
+                    onClick={() => setProductDropdownOpen(!productDropdownOpen)}
+                    className="p-1 -mr-1"
+                  >
+                    <ChevronDown
+                      className={`w-5 h-5 transition-transform ${
+                        productDropdownOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                    />
+                  </button>
+                </div>
+                {productDropdownOpen && (
+                  <div className="ml-4 mt-1 flex flex-col gap-1 border-l-2 border-gray-200 pl-3">
+                    {productDropdownItems.map((subItem) => (
+                      <Link
+                        key={subItem.title}
+                        href={subItem.link}
+                        onClick={handleLinkClick}
+                        className={`block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors ${
+                          isActiveLink(subItem.link) ? "text-green-600" : "text-gray-700 hover:text-green-600"
+                        }`}
+                      >
+                        {subItem.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                key={item.title}
+                href={item.link}
+                onClick={handleLinkClick}
+                className={`block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors ${
+                  isActiveLink(item.link) ? "text-green-600" : "text-black hover:text-green-600"
+                }`}
+              >
+                {item.title}
+              </Link>
+            )
+          )}
+        </div>
+      </div>
+    </>
+  );
+}), { ssr: false });
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -19,14 +157,13 @@ const Navbar = () => {
     const handleScroll = () => {
       const scrollTop =
         window.pageYOffset || document.documentElement.scrollTop;
-      setIsVisible(scrollTop < lastScrollTop || scrollTop < 50); // Show navbar at top
+      setIsVisible(scrollTop < lastScrollTop || scrollTop < 50);
       setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollTop]);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(".profile-dropdown-container")) {
@@ -59,7 +196,7 @@ const Navbar = () => {
     { title: "Wellness", link: "/category/Wellness" },
     { title: "Baby Care", link: "/category/Baby%20Care" },
     { title: "Personal Care", link: "/category/Personal%20Care" },
-    { title: "All Products", link: "/all-product" }, // Changed link for clarity
+    { title: "All Products", link: "/all-product" },
   ];
 
   const { cartItems } = useCart();
@@ -70,7 +207,6 @@ const Navbar = () => {
   );
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  // Auth button component based on session state (No changes needed here)
   const AuthButton = () => {
     if (status === "loading") {
       return (
@@ -87,12 +223,12 @@ const Navbar = () => {
       return (
         <Link
           href="/Login"
-          className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors"
+          className="flex items-center gap-2 text-black hover:text-green-600 transition-colors"
         >
           <div className="p-2 hover:bg-gray-100 rounded-full">
             <User className="w-[22px] h-[22px]" />
           </div>
-          <span className="text-sm font-medium hidden lg:block">Login</span>
+          <span className="text-md font-medium hidden lg:block">Login</span>
         </Link>
       );
     }
@@ -180,45 +316,15 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Center Navigation */}
-          <div className="hidden lg:flex items-center justify-center gap-9">
-            {items.map((item) =>
-              item.title === "Products" ? (
-                // ===== DESKTOP CHANGE START =====
-                <div key={item.title} className="relative group">
-                  {/* Container for the link and chevron */}
-                  <div className="flex items-center gap-1 text-md font-medium text-black group-hover:text-green-600 cursor-pointer">
-                    <Link href={item.link} className="py-1">
-                      {item.title}
-                    </Link>
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                  {/* Dropdown remains the same, triggered by group-hover */}
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-md rounded-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-300 z-50 py-1">
-                    {productDropdownItems.map((subItem) => (
-                      <Link
-                        key={subItem.title}
-                        href={subItem.link}
-                        className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-green-600"
-                      >
-                        {subItem.title}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                // ===== DESKTOP CHANGE END =====
-                <Link
-                  key={item.title}
-                  href={item.link}
-                  className="relative py-1 text-md font-medium text-black hover:text-green-600 group"
-                >
-                  <span>{item.title}</span>
-                  <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-green-500 group-hover:w-full transition-all duration-300"></span>
-                </Link>
-              )
-            )}
-          </div>
+          {/* Center Navigation - Dynamic component */}
+          <NavigationLinks 
+            items={items}
+            productDropdownItems={productDropdownItems}
+            handleLinkClick={handleLinkClick}
+            isMenuOpen={isMenuOpen}
+            productDropdownOpen={productDropdownOpen}
+            setProductDropdownOpen={setProductDropdownOpen}
+          />
 
           {/* Right side */}
           <div className="flex items-center gap-2 md:gap-8">
@@ -278,90 +384,22 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        <div
-          className={`fixed inset-x-0 top-24 bg-white/95 backdrop-blur-sm border-b border-gray-200 lg:hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen
-              ? "opacity-100 visible"
-              : "opacity-0 invisible pointer-events-none"
-          }`}
-          style={{
-            maxHeight: isMenuOpen ? "calc(100vh - 6rem)" : "0",
-            overflowY: "auto",
-          }}
-        >
-          <div className="px-4 py-2 space-y-1 mt-2 mb-4">
-            {items.map((item) =>
-              item.title === "Products" ? (
-                // ===== MOBILE CHANGE START =====
-                <div key={item.title} className="flex flex-col gap-1">
-                  <div className="flex justify-between items-center w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
-                    <Link
-                      href={item.link}
-                      onClick={handleLinkClick}
-                      className="text-sm font-medium text-black hover:text-green-600 flex-grow"
-                    >
-                      {item.title}
-                    </Link>
-                    <button
-                      onClick={() =>
-                        setProductDropdownOpen(!productDropdownOpen)
-                      }
-                      className="p-1 -mr-1" // Add padding for easier tapping
-                    >
-                      <ChevronDown
-                        className={`w-5 h-5 transition-transform ${
-                          productDropdownOpen ? "rotate-180" : "rotate-0"
-                        }`}
-                      />
-                    </button>
-                  </div>
-                  {productDropdownOpen && (
-                    <div className="ml-4 mt-1 flex flex-col gap-1 border-l-2 border-gray-200 pl-3">
-                      {productDropdownItems.map((subItem) => (
-                        <Link
-                          key={subItem.title}
-                          href={subItem.link}
-                          onClick={handleLinkClick}
-                          className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-green-600 hover:bg-gray-100"
-                        >
-                          {subItem.title}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                // ===== MOBILE CHANGE END =====
-                <Link
-                  key={item.title}
-                  href={item.link}
-                  onClick={handleLinkClick}
-                  className="block px-3 py-2 rounded-lg text-sm font-medium text-black hover:text-green-600 hover:bg-gray-100 transition-colors"
-                >
-                  {item.title}
-                </Link>
-              )
-            )}
-
-            {/* Mobile Auth Section */}
-            {session?.user && (
-              <div className="border-t border-gray-200 pt-2 mt-2">
-                <div className="flex items-center gap-3 px-3 py-2">
-                  {/* ... (rest of the mobile auth section is fine) ... */}
-                </div>
-              </div>
-            )}
+        {/* Mobile Auth Section */}
+        {isMenuOpen && session?.user && (
+          <div className="lg:hidden border-t border-gray-200 pt-2 mt-2 px-4 pb-4">
+            <div className="flex items-center gap-3 px-3 py-2">
+              {/* Mobile auth content can go here if needed */}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </nav>
   );
 };
 
-export default Navbar;
-
 // "use client";
+
+export default Navbar;
 // import { useState, useEffect } from "react";
 // import { useSession, signOut } from "next-auth/react";
 // import Link from "next/link";
