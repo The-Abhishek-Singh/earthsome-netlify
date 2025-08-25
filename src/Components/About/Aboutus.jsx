@@ -205,10 +205,10 @@ const AboutUsPage = () => {
                   : "translate-y-12 opacity-0"
               }`}
             >
-              <div className="inline-flex items-center gap-2 bg-green-100 px-4 py-2 rounded-full text-green-700 font-medium mb-4">
-                <Sparkles className="w-4 h-4" />
-                Our Journey
-              </div>
+              
+              <h2 className="text-5xl font-bold text-gray-900 pb-8 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+               Our Journey
+            </h2>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -314,17 +314,14 @@ const AboutUsPage = () => {
                 : "translate-y-12 opacity-0"
             }`}
           >
-            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full text-green-700 font-medium mb-6 shadow-lg">
-              <Star className="w-5 h-5" />
-              Why Choose Us
-            </div>
-            <h2 className="text-5xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+            
+            <h2 className="text-5xl font-bold text-gray-900 pb-8 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
               Why Choose EARTHSOME?
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            {/* <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Discover what makes our approach to natural wellness unique and
               trusted by thousands of satisfied customers.
-            </p>
+            </p> */}
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -389,10 +386,14 @@ const AboutUsPage = () => {
                 : "translate-y-12 opacity-0"
             }`}
           >
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-emerald-100 px-6 py-3 rounded-full text-green-700 font-medium mb-6">
+            {/* <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-emerald-100 px-6 py-3 rounded-full text-green-700 font-medium mb-6">
               <Users className="w-5 h-5" />
               Our Expert Team
-            </div>
+            </div> */}
+             <h2 className="text-5xl font-bold text-gray-900 pb-8 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+               Our Expert Team
+            </h2>
+
 
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               The passionate professionals behind Earthsome's mission to bring
@@ -514,10 +515,10 @@ const AboutUsPage = () => {
             }`}
           >
             <div className="max-w-4xl mx-auto">
-              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full text-white font-medium mb-8">
+              {/* <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full text-white font-medium mb-8">
                 <Heart className="w-5 h-5" />
                 Join Our Community
-              </div>
+              </div> */}
 
               <h2 className="text-5xl font-bold mb-8 leading-tight">
                 Join the Earthsome Community

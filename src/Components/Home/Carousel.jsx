@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Home() {
@@ -17,14 +18,17 @@ export default function Home() {
     {
       id: 1,
       imageUrl: "/Banner1.png",
+      link: "/Contact"
     },
     {
       id: 2,
       imageUrl: "/Banner2.png",
+      link: "/About"
     },
     {
       id: 3,
       imageUrl: "/Banner3.png",
+      link: "/all-product"
     },
   ];
 
@@ -226,6 +230,8 @@ export default function Home() {
   };
 
   return (
+    <>
+    <Link href={slides[currentSlide].link}>
     <div className="relative h-screen w-full overflow-hidden bg-black -mt-2 select-none">
       
       {/* Carousel container */}
@@ -265,6 +271,7 @@ export default function Home() {
                 }}
               >
                 {/* Background image with PROPERLY FIXED zoom effect */}
+                
                 <div 
                   className="absolute inset-0 bg-cover bg-center"
                   style={{ 
@@ -342,5 +349,7 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </Link>
+    </>
   );
 }

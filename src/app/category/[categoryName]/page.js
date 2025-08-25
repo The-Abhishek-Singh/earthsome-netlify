@@ -979,10 +979,10 @@ const CategoryPage = () => {
       <div className="bg-white shadow-sm border-b border-green-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-8 py-20 md:mt-20">
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+            {/* <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Star size={16} className="text-green-600" />
               {decodedCategory} Collection
-            </div>
+            </div> */}
             <h1 className="text-4xl md:text-5xl font-bold text-black mb-2 ">
               {decodedCategory}
             </h1>
