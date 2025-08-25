@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { Shield, Lock, Users, Heart, Pill } from 'lucide-react';
+import Link from 'next/link';
 
 const PrivacyPolicyPage = () => {
   const [visibleSections, setVisibleSections] = useState(new Set());
@@ -107,7 +108,7 @@ const PrivacyPolicyPage = () => {
                 {section.policies.map((policy, pIndex) => (
                   <div 
                     key={pIndex}
-                    className={`relative pl-6 py-4 border-l-2 border-gray-100 hover:border-green-200 transition-all duration-700 ${
+                    className={`relative pl-6 py-4  ${
                       visibleSections.has(`section-${index}`) 
                         ? 'opacity-100 translate-y-0' 
                         : 'opacity-0 translate-y-4'
@@ -165,13 +166,13 @@ const PrivacyPolicyPage = () => {
             }`} style={{ transitionDelay: '300ms' }}>
               Need help tracking your order or have questions about our delivery process? We&apos;re here to assist you.
             </p>
-            <button className={`inline-flex items-center px-8 py-3 bg-green-500 text-white font-medium rounded-full hover:bg-green-600 hover:shadow-lg hover:shadow-green-200 transition-all duration-300 transform hover:scale-105 ${
+            <Link href="/Contact" className={`inline-flex items-center px-8 py-3 bg-green-500 text-white font-medium rounded-full hover:bg-green-600 hover:shadow-lg hover:shadow-green-200 transition-all duration-300 transform hover:scale-105 ${
               visibleSections.has('footer-section') 
                 ? 'opacity-100 translate-y-0' 
                 : 'opacity-0 translate-y-4'
             }`} style={{ transitionDelay: '400ms' }}>
               Contact Support
-            </button>
+            </Link>
           </div>
         </div>
       </div>

@@ -83,7 +83,7 @@ const PrivacyPolicyPage = () => {
                 {section.policies.map((policy, pIndex) => (
                   <div 
                     key={pIndex}
-                    className={`relative pl-6 py-4 border-l-2 border-gray-100 hover:border-green-200 transition-all duration-700 ${
+                    className={`relative pl-6 py-4  ${
                       visibleSections.has(`section-${index}`) 
                         ? 'opacity-100 translate-y-0' 
                         : 'opacity-0 translate-y-4'
@@ -117,9 +117,7 @@ const PrivacyPolicyPage = () => {
           data-animate
         >
           <div className="text-center relative">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-green-300 to-transparent"></div>
-            </div>
+            
             <div className={`relative inline-flex items-center justify-center w-14 h-14 bg-green-500 rounded-2xl mb-8 shadow-lg shadow-green-200 transition-all duration-700 ${
               visibleSections.has('footer-section') 
                 ? 'opacity-100 translate-y-0' 
@@ -134,6 +132,9 @@ const PrivacyPolicyPage = () => {
             }`} style={{ transitionDelay: '200ms' }}>
               Need Assistance?
             </h3>
+            <div className=" inset-0 flex items-center justify-center mb-2 ">
+              <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-green-300 to-transparent"></div>
+            </div>
             <p className={`text-gray-500 font-light mb-6 max-w-md mx-auto transition-all duration-700 ${
               visibleSections.has('footer-section') 
                 ? 'opacity-100 translate-y-0' 
