@@ -181,13 +181,13 @@ const Navbar = () => {
           </div>
 
           {/* Center Navigation */}
-          <div className="hidden lg:flex items-center justify-center gap-6">
+          <div className="hidden lg:flex items-center justify-center gap-9">
             {items.map((item) =>
               item.title === "Products" ? (
                 // ===== DESKTOP CHANGE START =====
                 <div key={item.title} className="relative group">
                   {/* Container for the link and chevron */}
-                  <div className="flex items-center gap-1 text-sm font-medium text-black group-hover:text-green-600 cursor-pointer">
+                  <div className="flex items-center gap-1 text-md font-medium text-black group-hover:text-green-600 cursor-pointer">
                     <Link href={item.link} className="py-1">
                       {item.title}
                     </Link>
@@ -199,7 +199,7 @@ const Navbar = () => {
                       <Link
                         key={subItem.title}
                         href={subItem.link}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600"
+                        className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-green-600"
                       >
                         {subItem.title}
                       </Link>
@@ -211,7 +211,7 @@ const Navbar = () => {
                 <Link
                   key={item.title}
                   href={item.link}
-                  className="relative py-1 text-sm font-medium text-black hover:text-green-600 group"
+                  className="relative py-1 text-md font-medium text-black hover:text-green-600 group"
                 >
                   <span>{item.title}</span>
                   <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-green-500 group-hover:w-full transition-all duration-300"></span>
