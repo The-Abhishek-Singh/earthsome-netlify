@@ -41,10 +41,10 @@ const Footer = () => {
                     +91 9876543210
                   </a>
                 </div>
-                <div className="flex items-center space-x-2 group">
+                <div className="flex items-center space-x-1 group">
                   <span className="text-green-700 group-hover:scale-110 transition-transform duration-200 flex-shrink-0">📧</span>
                   <a href="mailto:hello@eartsome.in" className="text-black hover:text-green-700 transition-colors duration-200 text-sm md:text-base break-all">
-                    hello@eartsome.in
+                  earthsomemarketing@gmail.com
                   </a>
                 </div>
                 <div className="flex items-start space-x-2 group">
@@ -204,11 +204,11 @@ const Footer = () => {
         {/* Copyright */}
         <div className="text-center text-gray-600 text-sm mt-3 md:mt-4 pt-2">
           <p>
-            © 2024{" "}
+            © 2025{" "}
             <span className="text-green-700 font-medium hover:text-green-800 transition-colors duration-200">
-              Eartsome Innovations Pvt. Ltd
+              Eartsome
             </span>{" "}
-            | All rights reserved
+            . All rights reserved
           </p>
         </div>
       </div>
