@@ -51,8 +51,8 @@ const Bogo = () => {
   });
 
   // Base URLs for the APIs.
-  const API_BASE_URL = "http://localhost:5000/api/offers";
-  const PRODUCT_API_URL = "http://localhost:5000/api/products";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL + "/api/offers";
+  const PRODUCT_API_URL = process.env.NEXT_PUBLIC_API_URL + "/api/products";
 
   // Function to fetch all offers from the backend
   const fetchOffers = async () => {
