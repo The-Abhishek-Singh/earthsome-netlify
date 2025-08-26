@@ -433,15 +433,17 @@ const ProfilePage = () => {
 
   if (!isMounted) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="flex flex-col items-center space-y-4">
+        <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-6">
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
-            <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-green-400 rounded-full animate-ping"></div>
+            <div className="w-20 h-20 border-4 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-green-400 rounded-full animate-ping"></div>
           </div>
           <div className="text-center">
-            <p className="text-gray-600 font-medium">Loading your profile...</p>
-            <div className="flex space-x-1 mt-2">
+            <p className="text-gray-700 font-semibold text-lg">
+              Loading Profile Data...
+            </p>
+            <div className="flex space-x-1 mt-3">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
               <div
                 className="w-2 h-2 bg-green-500 rounded-full animate-bounce"
@@ -505,7 +507,7 @@ const ProfilePage = () => {
   const tabs = isAdmin ? adminTabs : userTabs;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
+    <div className="min-h-screen bg-white pt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
@@ -645,7 +647,7 @@ const ProfilePage = () => {
                             className="w-full text-gray-400 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                           />
                         ) : (
-                          <p className="px-4 py-2 text-black bg-gray-50 rounded-lg">
+                          <p className="px-4 py-2 text-black bg-gray-100 rounded-lg">
                             {userProfile.name}
                           </p>
                         )}
@@ -654,57 +656,12 @@ const ProfilePage = () => {
                         <label className="block text-sm font-medium text-black mb-2">
                           Email Address
                         </label>
-                        <p className="px-4 py-2 bg-gray-50 rounded-lg text-black">
+                        <p className="px-4 py-2 bg-gray-100 rounded-lg text-black">
                           {userProfile.email}
                         </p>
                       </div>
                     </div>
-                    {/* <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-black mb-2">
-                          Phone Number
-                        </label>
-                        {isEditing ? (
-                          <input
-                            type="tel"
-                            value={userProfile.phone}
-                            onChange={(e) =>
-                              setUserProfile({
-                                ...userProfile,
-                                phone: e.target.value,
-                              })
-                            }
-                            className="w-full px-4 py-2 border border-gray-300 text-gray-400 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                          />
-                        ) : (
-                          <p className="px-4 py-2 text-black bg-gray-50 rounded-lg">
-                            {userProfile.phone}
-                          </p>
-                        )}
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-black mb-2">
-                          Address
-                        </label>
-                        {isEditing ? (
-                          <textarea
-                            value={userProfile.address}
-                            onChange={(e) =>
-                              setUserProfile({
-                                ...userProfile,
-                                address: e.target.value,
-                              })
-                            }
-                            rows={3}
-                            className="w-full px-4 py-2 border text-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                          />
-                        ) : (
-                          <p className="px-4 py-2 bg-gray-50 text-black rounded-lg">
-                            {userProfile.address}
-                          </p>
-                        )}
-                      </div>
-                    </div> */}
+                   
                   </div>
                   {isEditing && (
                     <div className="flex justify-end">

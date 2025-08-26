@@ -9,7 +9,7 @@ const EarthsomeLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fef6f1] flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-10  mb-[481px]">
+    <div className="min-h-screen bg-[#fef6f1] flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-10  mb-[1000px] sm:mb-[550px] md:mb-[599px]  lg:mb-[422px]">
       <div className="max-w-md w-full space-y-8 animate-fade-in">
         {/* Brand Logo/Icon */}
         <div className="text-center">
@@ -36,7 +36,7 @@ const EarthsomeLogin = () => {
             <h2 className="text-2xl font-semibold text-black mb-2">
               Sign in to your account
             </h2>
-            <p className="text-black/60 text-sm">
+            <p className="text-green-500 text-sm">
               Continue your organic journey with us
             </p>
           </div>
@@ -65,7 +65,7 @@ const EarthsomeLogin = () => {
 
         {/* Footer */}
         <div className="text-center">
-          <p className="text-black/40 text-sm">
+          <p className="text-black text-sm">
             Crafted with 🌱 for a sustainable future
           </p>
         </div>
