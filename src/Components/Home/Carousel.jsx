@@ -18,17 +18,17 @@ export default function Home() {
     {
       id: 1,
       imageUrl: "/Banner1.png",
-      link: "/Contact"
+      link: ""
     },
     {
       id: 2,
       imageUrl: "/Banner2.png",
-      link: "/About"
+      link: ""
     },
     {
       id: 3,
       imageUrl: "/Banner3.png",
-      link: "/all-product"
+      link: ""
     },
   ];
 
