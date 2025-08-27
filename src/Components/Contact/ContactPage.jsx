@@ -9,6 +9,8 @@ import {
   MessageCircle,
   CheckCircle,
   Loader2,
+  Target,
+  AlertCircle,
 } from "lucide-react";
 
 export default function ContactPage() { 
@@ -16,53 +18,136 @@ export default function ContactPage() {
     name: "",
     email: "",
     contact: "",
+    purpose: "",
     message: "",
   });
+  const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState("");
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const purposeOptions = [
+    { value: "", label: "Select purpose of your request" },
+    { value: "general_inquiry", label: "General Inquiry" },
+    { value: "wellness_consultation", label: "Wellness Consultation" },
+    { value: "product_information", label: "Product Information" },
+    { value: "appointment_booking", label: "Appointment Booking" },
+    { value: "health_advice", label: "Health Advice" },
+    { value: "nutrition_guidance", label: "Nutrition Guidance" },
+    { value: "fitness_program", label: "Fitness Program" },
+    { value: "support", label: "Customer Support" },
+    { value: "other", label: "Other" },
+  ];
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const validateContact = (contact) => {
+    const cleanContact = contact.replace(/\D/g, '');
+    return cleanContact.length === 10;
+  };
 
-    const response = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        access_key: "dc819da8-4380-4b80-9d77-2ff43963bc8e",
-        name: formData.name,
-        email: formData.email,
-        contact: formData.contact,
-        message: formData.message,
-      }),
-    });
-
-    const result = await response.json();
-    setIsLoading(false);
-
-    if (result.success) {
-      setIsSubmitted(true);
-      setFormData({ name: "", email: "", contact: "", message: "" });
-
-      setTimeout(() => setIsSubmitted(false), 4000);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    
+    if (name === "contact") {
+      const cleanValue = value.replace(/\D/g, '').slice(0, 10);
+      setFormData({
+        ...formData,
+        [name]: cleanValue,
+      });
     } else {
-      alert("❌ Something went wrong. Please try again later.");
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: "",
+      });
     }
   };
 
-  // ... keep your entire component structure same below
-  // Just update the form section with this:
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = "Please enter a valid email address (e.g., user@example.com)";
+    }
+
+    if (!formData.contact.trim()) {
+      newErrors.contact = "Contact number is required";
+    } else if (!validateContact(formData.contact)) {
+      newErrors.contact = "Contact number must be exactly 10 digits";
+    }
+
+    if (!formData.purpose) {
+      newErrors.purpose = "Please select the purpose of your request";
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = async () => {
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
+    setIsLoading(true);
+    setErrors({});
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "dc819da8-4380-4b80-9d77-2ff43963bc8e",
+          name: formData.name,
+          email: formData.email,
+          contact: formData.contact,
+          purpose: purposeOptions.find(opt => opt.value === formData.purpose)?.label || formData.purpose,
+          message: formData.message || "No additional message provided",
+        }),
+      });
+
+      const result = await response.json();
+      setIsLoading(false);
+
+      if (result.success) {
+        setIsSubmitted(true);
+        setFormData({ name: "", email: "", contact: "", purpose: "", message: "" });
+        setTimeout(() => setIsSubmitted(false), 4000);
+      } else {
+        alert("❌ Something went wrong. Please try again later.");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      alert("❌ Network error. Please check your connection and try again.");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -73,11 +158,11 @@ export default function ContactPage() {
           <div className="animate-fade-in-up">
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
               YOUR PATH TO
-              <span className="block text-green-600 ">
+              <span className="block text-green-600">
                 HEALTH & WELLNESS
               </span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed ">
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Get in Touch – Your Wellness Matters to Us!
             </p>
           </div>
@@ -100,92 +185,168 @@ export default function ContactPage() {
                   Start Your Wellness Journey
                 </h2>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-6" onKeyDown={handleKeyDown}>
                   {/* Name Field */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Name <span className="text-green-600">*</span>
+                      Name <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <User
                         className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-300 ${
                           focusedField === "name"
                             ? "text-green-600"
+                            : errors.name 
+                            ? "text-red-500"
                             : "text-gray-400"
                         }`}
                       />
                       <input
                         type="text"
                         name="name"
-                        required
                         value={formData.name}
                         onChange={handleInputChange}
                         onFocus={() => setFocusedField("name")}
                         onBlur={() => setFocusedField("")}
-                        className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500"
+                        className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl focus:ring-4 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 ${
+                          errors.name
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-200 focus:border-green-500 focus:ring-green-100"
+                        }`}
                         placeholder="Enter your full name"
                       />
+                      {errors.name && (
+                        <div className="flex items-center mt-2 text-red-500 text-sm">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {errors.name}
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   {/* Email Field */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email <span className="text-green-600">*</span>
+                      Email <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <Mail
                         className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-300 ${
                           focusedField === "email"
                             ? "text-green-600"
+                            : errors.email 
+                            ? "text-red-500"
                             : "text-gray-400"
                         }`}
                       />
                       <input
                         type="email"
                         name="email"
-                        required
                         value={formData.email}
                         onChange={handleInputChange}
                         onFocus={() => setFocusedField("email")}
                         onBlur={() => setFocusedField("")}
-                        className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500"
+                        className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl focus:ring-4 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 ${
+                          errors.email
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-200 focus:border-green-500 focus:ring-green-100"
+                        }`}
                         placeholder="your.email@example.com"
                       />
+                      {errors.email && (
+                        <div className="flex items-center mt-2 text-red-500 text-sm">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {errors.email}
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   {/* Contact Field */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Contact Number <span className="text-green-600">*</span>
+                      Contact Number <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <Phone
                         className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-300 ${
                           focusedField === "contact"
                             ? "text-green-600"
+                            : errors.contact 
+                            ? "text-red-500"
                             : "text-gray-400"
                         }`}
                       />
                       <input
                         type="tel"
                         name="contact"
-                        required
                         value={formData.contact}
                         onChange={handleInputChange}
                         onFocus={() => setFocusedField("contact")}
                         onBlur={() => setFocusedField("")}
-                        className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500"
-                        placeholder="+91 XXXXX XXXXX"
+                        className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl focus:ring-4 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 ${
+                          errors.contact
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-200 focus:border-green-500 focus:ring-green-100"
+                        }`}
+                        placeholder="9XXXXXXXXX (10 digits only)"
+                        maxLength="10"
                       />
+                      {errors.contact && (
+                        <div className="flex items-center mt-2 text-red-500 text-sm">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {errors.contact}
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  {/* Message Field */}
+                  {/* Purpose Field */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Message <span className="text-green-600">*</span>
+                      Purpose of Request <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <Target
+                        className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-300 ${
+                          focusedField === "purpose"
+                            ? "text-green-600"
+                            : errors.purpose 
+                            ? "text-red-500"
+                            : "text-gray-400"
+                        }`}
+                      />
+                      <select
+                        name="purpose"
+                        value={formData.purpose}
+                        onChange={handleInputChange}
+                        onFocus={() => setFocusedField("purpose")}
+                        onBlur={() => setFocusedField("")}
+                        className={`w-full pl-12 pr-4 py-4 border-2 rounded-xl focus:ring-4 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 ${
+                          errors.purpose
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                            : "border-gray-200 focus:border-green-500 focus:ring-green-100"
+                        }`}
+                      >
+                        {purposeOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.purpose && (
+                        <div className="flex items-center mt-2 text-red-500 text-sm">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {errors.purpose}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Message Field - Now Optional */}
+                  <div className="group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Additional Message <span className="text-gray-400 text-xs">(Optional)</span>
                     </label>
                     <div className="relative">
                       <MessageCircle
@@ -197,21 +358,20 @@ export default function ContactPage() {
                       />
                       <textarea
                         name="message"
-                        required
                         rows="5"
                         value={formData.message}
                         onChange={handleInputChange}
                         onFocus={() => setFocusedField("message")}
                         onBlur={() => setFocusedField("")}
                         className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 resize-none"
-                        placeholder="Tell us about your wellness goals or any questions you have..."
+                        placeholder="Any additional details about your wellness goals or questions... (Optional)"
                       ></textarea>
                     </div>
                   </div>
 
                   {/* Submit Button */}
                   <button
-                    type="submit"
+                    onClick={handleSubmit}
                     disabled={isSubmitted || isLoading}
                     className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white font-bold py-4 px-8 rounded-xl hover:from-green-700 hover:to-green-800 focus:ring-4 focus:ring-green-300 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                   >
@@ -232,13 +392,13 @@ export default function ContactPage() {
                       </>
                     )}
                   </button>
-                </form>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Contact Information */}
-          <div className="space-y-6 ">
+          <div className="space-y-6">
             {/* Contact Cards */}
             <div className="grid gap-6">
               {/* Email Card */}
@@ -293,8 +453,7 @@ export default function ContactPage() {
                     <h3 className="font-bold text-gray-900 mb-2">Visit Us</h3>
                     <p className="text-gray-600 mb-3">Come see us in person</p>
                     <address className="text-green-600 hover:text-green-700 font-semibold not-italic">
-                     610-613, Floor Anam 2, S P mng Rign Road. Ambli. Ahmedabad - 380058 <br />{" "}
-                      
+                     610-613, Floor Anam 2, S P mng Rign Road. Ambli. Ahmedabad - 380058
                     </address>
                   </div>
                 </div>
@@ -313,10 +472,10 @@ export default function ContactPage() {
 
               {/* Social Media Buttons */}
               <div className="flex justify-center gap-4 mt-6">
-                <button className="bg-white hover:bg-green-600 text-green-600 hover:text-white px-4   sm:px-6 sm:py-3 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+                <button className="bg-white hover:bg-green-600 text-green-600 hover:text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
                   Follow for Tips
                 </button>
-                <button className="bg-green-600 hover:bg-green-700 text-white sm:px-6 sm:py-3 px-10 py-2 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+                <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 sm:px-6 sm:py-3 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
                   Get Updates
                 </button>
               </div>
@@ -324,9 +483,6 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
-
-
-
     </div>
   );
 }
