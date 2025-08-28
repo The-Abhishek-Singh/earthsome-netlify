@@ -50,7 +50,7 @@ const Footer = () => {
                 <div className="flex items-start space-x-2 group">
                   <span className="text-green-700 mt-0.5 group-hover:scale-110 transition-transform duration-200 flex-shrink-0">📍</span>
                   <p className="text-black hover:text-green-700 transition-colors duration-200 text-xs md:text-sm leading-relaxed">
-                    610-613, Floor Anam 2, S P mng Rign Road. Ambli. Ahmedabad - 380058
+                 610-613, 6<sup>th</sup> Floor, Anam 2. S P Ring Road. Ambli. Ahmedabad - 380058
                   </p>
                 </div>
               </div>

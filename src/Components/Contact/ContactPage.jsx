@@ -453,7 +453,7 @@ export default function ContactPage() {
                     <h3 className="font-bold text-gray-900 mb-2">Visit Us</h3>
                     <p className="text-gray-600 mb-3">Come see us in person</p>
                     <address className="text-green-600 hover:text-green-700 font-semibold not-italic">
-                     610-613, Floor Anam 2, S P mng Rign Road. Ambli. Ahmedabad - 380058
+                     610-613, 6<sup>th</sup> Floor, Anam 2. S P Ring Road. Ambli. Ahmedabad - 380058
                     </address>
                   </div>
                 </div>

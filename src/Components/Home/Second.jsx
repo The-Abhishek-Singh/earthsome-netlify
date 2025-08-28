@@ -841,7 +841,7 @@ const BestSellers = () => {
       </div>
       <div className="text-center mt-16">
         <button
-          onClick={() => router.push("/bestsellers")}
+          onClick={() => router.push("/all-product")}
           className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-10 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-500/50"
         >
           View All Products
