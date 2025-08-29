@@ -61,7 +61,6 @@ const ComboProductsShowcase = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/api/offers`
         );
         
-        // Filter only COMBO type offers that are active
         const combos = res.data.offers.filter(
           offer => offer.type === "COMBO" && offer.isActive
         );
@@ -101,10 +100,24 @@ const ComboProductsShowcase = () => {
     setAddingToCart(offer._id);
 
     try {
-      // Add each product in the combo to cart
-      for (const product of offer.comboProducts) {
-        await addToCart(product);
-      }
+      // Create a combo product object with the calculated combo price
+      const pricing = calculateComboPrice(offer.comboProducts, offer.discountPercentage);
+      
+      const comboProduct = {
+        _id: offer._id,
+        productName: offer.title,
+        price: pricing.finalPrice,
+        originalPrice: pricing.originalPrice,
+        productImageURL: offer.comboProducts[0]?.productImageURL || '',
+        isCombo: true,
+        comboProducts: offer.comboProducts,
+        comboImages: offer.comboProducts.map(p => p.productImageURL),
+        quantity: 1,
+        discountPercentage: offer.discountPercentage
+      };
+      
+      // Add the combo as a single product to cart
+      await addToCart(comboProduct);
       
       setToast({
         message: `${offer.title} added to cart!`,
@@ -121,10 +134,8 @@ const ComboProductsShowcase = () => {
   };
 
   const handleComboClick = (offer) => {
-    // You can navigate to a combo details page or handle as needed
-    // For now, let's just show the first product
     if (offer.comboProducts && offer.comboProducts.length > 0) {
-      router.push(`/combo/${offer._id}`); // Create a combo details page
+      router.push(`/Comboes/${offer._id}`);
     }
   };
 
@@ -141,16 +152,9 @@ const ComboProductsShowcase = () => {
 
       {/* Header Section */}
       <div className="text-center mb-16">
-        {/* <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-50 to-red-50 text-orange-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
-          <Gift size={16} className="text-orange-600" />
-          Special Combo Deals
-        </div> */}
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
           Combo Offers
         </h2>
-        {/* <p className="text-gray-600 max-w-2xl mx-auto text-lg leading-relaxed">
-          Save more with our specially curated product combinations designed for maximum value.
-        </p> */}
       </div>
 
       {loading ? (
@@ -176,6 +180,7 @@ const ComboProductsShowcase = () => {
               const pricing = calculateComboPrice(offer.comboProducts, offer.discountPercentage);
               
               return (
+                
                 <div
                   key={offer._id}
                   className="group relative bg-white rounded-2xl md:rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-500 overflow-hidden cursor-pointer transform hover:-translate-y-2"

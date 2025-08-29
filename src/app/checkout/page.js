@@ -5,7 +5,7 @@ const page = () => {
   return (
     <div >
 
-<div className='pt-28 pb-10' >
+<div className='pt-28 ' >
 
 <ShippingForm />
 
