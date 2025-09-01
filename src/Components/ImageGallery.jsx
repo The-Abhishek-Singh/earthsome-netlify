@@ -81,6 +81,7 @@ export default function ImageGallery({ images = [], productName }) {
               selectedIndex === i ? "ring-2 ring-blue-600" : ""
             }`}
           >
+            if(img){
             <Image
               src={img}
               alt={`${productName} ${i + 1}`}
@@ -88,6 +89,7 @@ export default function ImageGallery({ images = [], productName }) {
               height={80}
               className="h-full w-full object-cover object-center"
             />
+            }
           </div>
         ))}
       </div>

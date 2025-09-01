@@ -172,20 +172,12 @@ export default function ComboProductDetailPage() {
     fetchComboOffer();
   }, [id]);
 
-  const calculateTotalPrice = () => {
-    if (!comboOffer) return 0;
-    return comboOffer.comboProducts.reduce((total, product) => total + product.price, 0);
-  };
-
-  const calculateTotalOriginalPrice = () => {
-    if (!comboOffer) return 0;
-    return comboOffer.comboProducts.reduce((total, product) => {
-      return total + (product.originalPrice || product.price);
-    }, 0);
-  };
-
-  const calculateTotalSavings = () => {
-    return calculateTotalOriginalPrice() - calculateTotalPrice();
+  // Use the same calculation logic as ComboProductsShowcase
+  const calculateComboPrice = (products, discountPercentage) => {
+    const totalOriginalPrice = products.reduce((sum, product) => sum + product.price, 0);
+    const discountAmount = (totalOriginalPrice * discountPercentage) / 100;
+    const finalPrice = totalOriginalPrice - discountAmount;
+    return { originalPrice: totalOriginalPrice, finalPrice, savings: discountAmount };
   };
 
   const handleAddToCart = async () => {
@@ -193,16 +185,21 @@ export default function ComboProductDetailPage() {
     
     setAddingToCart(true);
     try {
-      // Create a combo product object with the combined price
+      // Use the same calculation as ComboProductsShowcase
+      const pricing = calculateComboPrice(comboOffer.comboProducts, comboOffer.discountPercentage);
+      
+      // Create a combo product object with the calculated combo price
       const comboProduct = {
         _id: comboOffer._id,
         productName: comboOffer.title,
-        price: calculateTotalPrice(),
-        originalPrice: calculateTotalOriginalPrice(),
+        price: pricing.finalPrice,
+        originalPrice: pricing.originalPrice,
         productImageURL: comboOffer.comboProducts[0]?.productImageURL || '',
         isCombo: true,
         comboProducts: comboOffer.comboProducts,
-        quantity: 1
+        comboImages: comboOffer.comboProducts.map(p => p.productImageURL),
+        quantity: 1,
+        discountPercentage: comboOffer.discountPercentage
       };
       
       await addToCart(comboProduct);
@@ -226,16 +223,21 @@ export default function ComboProductDetailPage() {
     
     setBuyingNow(true);
     try {
-      // Create a combo product object with the combined price
+      // Use the same calculation as ComboProductsShowcase
+      const pricing = calculateComboPrice(comboOffer.comboProducts, comboOffer.discountPercentage);
+      
+      // Create a combo product object with the calculated combo price
       const comboProduct = {
         _id: comboOffer._id,
         productName: comboOffer.title,
-        price: calculateTotalPrice(),
-        originalPrice: calculateTotalOriginalPrice(),
+        price: pricing.finalPrice,
+        originalPrice: pricing.originalPrice,
         productImageURL: comboOffer.comboProducts[0]?.productImageURL || '',
         isCombo: true,
         comboProducts: comboOffer.comboProducts,
-        quantity: 1
+        comboImages: comboOffer.comboProducts.map(p => p.productImageURL),
+        quantity: 1,
+        discountPercentage: comboOffer.discountPercentage
       };
       
       await addToCart(comboProduct);
@@ -262,10 +264,12 @@ export default function ComboProductDetailPage() {
   if (error) throw new Error(error);
   if (!comboOffer) return notFound();
 
-  const totalPrice = calculateTotalPrice();
-  const totalOriginalPrice = calculateTotalOriginalPrice();
-  const totalSavings = calculateTotalSavings();
-  const discountPercentage = Math.round((totalSavings / totalOriginalPrice) * 100);
+  // Use the same calculation as ComboProductsShowcase
+  const pricing = calculateComboPrice(comboOffer.comboProducts, comboOffer.discountPercentage);
+  const totalPrice = pricing.finalPrice;
+  const totalOriginalPrice = pricing.originalPrice;
+  const totalSavings = pricing.savings;
+  const discountPercentage = comboOffer.discountPercentage;
 
   // Get all images from all products in the combo
   const allComboImages = comboOffer.comboProducts.flatMap(product => 
@@ -309,28 +313,7 @@ export default function ComboProductDetailPage() {
                 onSelectImage={setSelectedImageIndex}
               />
               
-              {/* Combo product thumbnails */}
-              <div className="flex gap-2 mt-4 overflow-x-auto">
-                {comboOffer.comboProducts.map((product, index) => (
-                  <button
-                    key={product._id}
-                    onClick={() => setSelectedImageIndex(
-                      allComboImages.indexOf(product.productImageURL)
-                    )}
-                    className={`flex-shrink-0 w-16 h-16 border rounded-md overflow-hidden ${
-                      allComboImages[selectedImageIndex] === product.productImageURL 
-                        ? 'ring-2 ring-green-500' 
-                        : 'border-gray-200'
-                    }`}
-                  >
-                    <img
-                      src={product.productImageURL}
-                      alt={product.productName}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
+            
             </div>
           </div>
 
@@ -371,8 +354,8 @@ export default function ComboProductDetailPage() {
               {/* Price Section */}
               <div className="mb-8">
                 <div className="flex items-baseline gap-4 mb-2">
-                  <span className="text-3xl font-bold text-gray-900">₹{totalPrice}</span>
-                  <span className="text-lg text-gray-500 line-through">₹{totalOriginalPrice}</span>
+                  <span className="text-3xl font-bold text-gray-900">₹{totalPrice.toFixed(2)}</span>
+                  <span className="text-lg text-gray-500 line-through">₹{totalOriginalPrice.toFixed(2)}</span>
                   <span className="bg-red-100 text-red-600 text-sm font-medium px-2 py-1 rounded">
                     {discountPercentage}% OFF
                   </span>
