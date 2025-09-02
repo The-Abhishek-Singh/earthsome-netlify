@@ -583,7 +583,7 @@ const CartPage = () => {
   };
 
   return (
-    <div className="min-h-screen mt-6  sm:mt-28 bg-white mb-[481px]">
+    <div className="min-h-screen mt-6  sm:mt-28 bg-white ">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -6,7 +6,7 @@ import { CheckCircle2 } from 'lucide-react';
 const ThankYouPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 py-16 px-4 mt-24">
-      <div className="max-w-2xl mx-auto text-center">
+      <div className="max-w-2xl mx-auto text-center mt-4">
         <div className="mb-8 flex justify-center">
           <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
             <CheckCircle2 className="w-12 h-12 text-green-500" />
