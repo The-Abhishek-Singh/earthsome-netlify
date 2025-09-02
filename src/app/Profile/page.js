@@ -507,44 +507,46 @@ const ProfilePage = () => {
   const tabs = isAdmin ? adminTabs : userTabs;
 
   return (
-    <div className="min-h-screen bg-white pt-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-white pt-20 sm:pt-24">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="relative">
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              <div className="relative flex-shrink-0">
                 {session.user.image ? (
-                  <Image
-                    src={session.user.image}
-                    alt="Profile"
-                    width={80}
-                    height={80}
-                    className="w-20 h-20 rounded-full border-4 border-green-100"
-                    priority
-                  />
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20">
+                    <Image
+                      src={session.user.image}
+                      alt="Profile"
+                      fill
+                      className="rounded-full border-4 border-green-100 object-cover"
+                      priority
+                      sizes="(max-width: 640px) 64px, 80px"
+                    />
+                  </div>
                 ) : (
-                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                    <User className="w-8 h-8 text-green-600" />
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <User className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
                   </div>
                 )}
                 {isAdmin && (
                   <div className="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-1">
-                    <Crown className="w-4 h-4 text-yellow-800" />
+                    <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-800" />
                   </div>
                 )}
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-black flex items-center gap-2">
-                  {session.user.name}
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg sm:text-2xl font-bold text-black flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                  <span className="truncate">{session.user.name}</span>
                   {isAdmin && (
-                    <span className="text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-medium">
+                    <span className="text-xs sm:text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-medium self-start">
                       Admin
                     </span>
                   )}
                 </h1>
-                <p className="text-black">{session.user.email}</p>
-                <p className="text-sm text-black">
+                <p className="text-sm sm:text-base text-black truncate">{session.user.email}</p>
+                <p className="text-xs sm:text-sm text-black">
                   {isAdmin
                     ? "Administrator Account"
                     : `Member since ${userProfile.joinDate}`}
@@ -553,7 +555,7 @@ const ProfilePage = () => {
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start"
             >
               <LogOut className="w-4 h-4" />
               Logout  
@@ -561,11 +563,11 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm p-4">
-              <nav className="space-y-2">
+            <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4">
+              <nav className="space-y-1 sm:space-y-2">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   if (tab.id === "orders" && !isAdmin) {
@@ -573,15 +575,15 @@ const ProfilePage = () => {
                       <Link
                         key={tab.id}
                         href="/orders"
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                        className={`w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-left transition-colors text-sm sm:text-base ${
                           activeTab === tab.id
                             ? "bg-green-50 text-green-600 border-r-2 border-green-600"
                             : "text-black hover:bg-gray-50"
                         }`}
                         onClick={() => setActiveTab(tab.id)}
                       >
-                        <Icon className="w-5 h-5" />
-                        {tab.label}
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                        <span className="truncate">{tab.label}</span>
                       </Link>
                     );
                   }
@@ -589,14 +591,14 @@ const ProfilePage = () => {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      className={`w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-left transition-colors text-sm sm:text-base ${
                         activeTab === tab.id
                           ? "bg-green-50 text-green-600 border-r-2 border-green-600"
                           : "text-black hover:bg-gray-50"
                       }`}
                     >
-                      <Icon className="w-5 h-5" />
-                      {tab.label}
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                      <span className="truncate">{tab.label}</span>
                     </button>
                   );
                 })}
@@ -606,18 +608,18 @@ const ProfilePage = () => {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
               {/* Profile Tab */}
               {activeTab === "profile" && (
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-black">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <h2 className="text-lg sm:text-xl font-semibold text-black">
                       {isAdmin ? "Admin Profile" : "Personal Information"}
                     </h2>
                     {!isAdmin && (
                       <button
                         onClick={() => setIsEditing(!isEditing)}
-                        className="flex items-center gap-2 px-4 py-2 text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-colors"
+                        className="flex items-center justify-center gap-2 px-4 py-2 text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-colors text-sm sm:text-base"
                       >
                         {isEditing ? (
                           <X className="w-4 h-4" />
@@ -628,7 +630,7 @@ const ProfilePage = () => {
                       </button>
                     )}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-black mb-2">
@@ -644,10 +646,10 @@ const ProfilePage = () => {
                                 name: e.target.value,
                               })
                             }
-                            className="w-full text-gray-400 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            className="w-full text-gray-400 px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm sm:text-base"
                           />
                         ) : (
-                          <p className="px-4 py-2 text-black bg-gray-100 rounded-lg">
+                          <p className="px-3 sm:px-4 py-2 text-black bg-gray-100 rounded-lg text-sm sm:text-base break-words">
                             {userProfile.name}
                           </p>
                         )}
@@ -656,7 +658,7 @@ const ProfilePage = () => {
                         <label className="block text-sm font-medium text-black mb-2">
                           Email Address
                         </label>
-                        <p className="px-4 py-2 bg-gray-100 rounded-lg text-black">
+                        <p className="px-3 sm:px-4 py-2 bg-gray-100 rounded-lg text-black text-sm sm:text-base break-words">
                           {userProfile.email}
                         </p>
                       </div>
@@ -667,7 +669,7 @@ const ProfilePage = () => {
                     <div className="flex justify-end">
                       <button
                         onClick={handleSaveProfile}
-                        className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                        className="flex items-center gap-2 px-4 sm:px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
                       >
                         <Save className="w-4 h-4" />
                         Save Changes
@@ -675,35 +677,35 @@ const ProfilePage = () => {
                     </div>
                   )}
                   {isAdmin && (
-                    <div className="mt-8 pt-6 border-t border-gray-200">
-                      <h3 className="text-lg font-semibold text-black mb-4">
+                    <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200">
+                      <h3 className="text-base sm:text-lg font-semibold text-black mb-4">
                         Quick Actions
                       </h3>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                         <Link
                           href="/admin/products"
-                          className="p-4 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-center"
+                          className="p-3 sm:p-4 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-center"
                         >
-                          <ShoppingBag className="w-6 h-6 mx-auto mb-2" />
-                          <span className="text-sm font-medium">
+                          <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2" />
+                          <span className="text-xs sm:text-sm font-medium">
                             Manage Products
                           </span>
                         </Link>
                         <Link
                           href="/admin/orders"
-                          className="p-4 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors text-center"
+                          className="p-3 sm:p-4 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors text-center"
                         >
-                          <Users className="w-6 h-6 mx-auto mb-2" />
-                          <span className="text-sm font-medium">
+                          <Users className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2" />
+                          <span className="text-xs sm:text-sm font-medium">
                             Manage Users
                           </span>
                         </Link>
                         <Link
                           href="/admin/dashboard"
-                          className="p-4 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100 transition-colors text-center"
+                          className="p-3 sm:p-4 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100 transition-colors text-center"
                         >
-                          <BarChart3 className="w-6 h-6 mx-auto mb-2" />
-                          <span className="text-sm font-medium">Analytics</span>
+                          <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-2" />
+                          <span className="text-xs sm:text-sm font-medium">Analytics</span>
                         </Link>
                       </div>
                     </div>
@@ -714,13 +716,13 @@ const ProfilePage = () => {
               {/* Addresses Tab */}
               {activeTab === "addresses" && !isAdmin && (
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-black">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <h2 className="text-lg sm:text-xl font-semibold text-black">
                       Saved Addresses
                     </h2>
                     <button
                       onClick={handleAddAddressClick}
-                      className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
                     >
                       <Plus className="w-4 h-4" />
                       Add New Address
@@ -728,31 +730,31 @@ const ProfilePage = () => {
                   </div>
 
                   {loadingAddresses ? (
-                    <div className="text-center py-12">
-                      <p className="text-gray-500">Loading addresses...</p>
+                    <div className="text-center py-8 sm:py-12">
+                      <p className="text-gray-500 text-sm sm:text-base">Loading addresses...</p>
                     </div>
                   ) : addresses.length === 0 && editingAddress === null ? (
-                    <div className="text-center py-12">
-                      <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    <div className="text-center py-8 sm:py-12">
+                      <MapPin className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
                         No Addresses Found
                       </h3>
-                      <p className="text-gray-500">
+                      <p className="text-gray-500 text-sm sm:text-base px-4">
                         Add your first address to save it for future orders.
                       </p>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                       {addresses.map((address) => (
                         <div
                           key={address._id}
                           className="border border-gray-200 rounded-lg p-4"
                         >
-                          <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-black">
+                          <div className="flex items-center justify-between mb-3">
+                            <h3 className="font-semibold text-black text-sm sm:text-base truncate">
                               {address.fullName}
                             </h3>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-shrink-0">
                               {address.isDefault && (
                                 <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
                                   Default
@@ -760,32 +762,34 @@ const ProfilePage = () => {
                               )}
                               <button
                                 onClick={() => handleEditAddressClick(address)}
-                                className="p-1 text-gray-400 hover:text-gray-600"
+                                className="p-1.5 text-gray-400 hover:text-gray-600 rounded"
                               >
                                 <Edit className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => deleteAddress(address._id)}
-                                className="p-1 text-gray-400 hover:text-red-600"
+                                className="p-1.5 text-gray-400 hover:text-red-600 rounded"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
                           </div>
-                          <p className="text-black text-sm">
-                            {address.addressLine1},{" "}
-                            {address.addressLine2 &&
-                              `${address.addressLine2}, `}
-                            {address.city}, {address.state} - {address.pincode}
-                          </p>
-                          <p className="text-black text-sm mt-1">
-                            <Phone className="inline w-3 h-3 mr-1" />
-                            {address.mobileNumber}
-                          </p>
-                          <p className="text-black text-sm">
-                            <Mail className="inline w-3 h-3 mr-1" />
-                            {address.email}
-                          </p>
+                          <div className="space-y-2">
+                            <p className="text-black text-sm break-words">
+                              {address.addressLine1},{" "}
+                              {address.addressLine2 &&
+                                `${address.addressLine2}, `}
+                              {address.city}, {address.state} - {address.pincode}
+                            </p>
+                            <p className="text-black text-sm flex items-center gap-1">
+                              <Phone className="w-3 h-3 flex-shrink-0" />
+                              <span className="break-all">{address.mobileNumber}</span>
+                            </p>
+                            <p className="text-black text-sm flex items-center gap-1">
+                              <Mail className="w-3 h-3 flex-shrink-0" />
+                              <span className="break-all">{address.email}</span>
+                            </p>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -793,16 +797,16 @@ const ProfilePage = () => {
 
                   {/* New/Edit Address Form Modal/Section */}
                   {editingAddress !== null && (
-                    <div className="bg-gray-50 p-6 mt-6 rounded-lg border border-gray-200">
-                      <h3 className="text-lg font-semibold text-black mb-4">
+                    <div className="bg-gray-50 p-4 sm:p-6 mt-6 rounded-lg border border-gray-200">
+                      <h3 className="text-base sm:text-lg font-semibold text-black mb-4">
                         {editingAddress === ""
                           ? "Add New Address"
                           : "Edit Address"}
                       </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {/* Full Name */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Full Name
                           </label>
                           <input
@@ -810,7 +814,7 @@ const ProfilePage = () => {
                             name="fullName"
                             value={newAddressFormData.fullName}
                             onChange={handleAddressInputChange}
-                            className={`text-black w-full px-3 py-2 mt-1 border rounded-md ${
+                            className={`text-black w-full px-3 py-2 border rounded-md text-sm sm:text-base ${
                               addressErrors.fullName
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -824,7 +828,7 @@ const ProfilePage = () => {
                         </div>
                         {/* Mobile Number */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Mobile Number
                           </label>
                           <input
@@ -832,7 +836,7 @@ const ProfilePage = () => {
                             name="mobileNumber"
                             value={newAddressFormData.mobileNumber}
                             onChange={handleAddressInputChange}
-                            className={`w-full px-3 py-2 mt-1 border rounded-md text-black ${
+                            className={`w-full px-3 py-2 border rounded-md text-black text-sm sm:text-base ${
                               addressErrors.mobileNumber
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -845,8 +849,8 @@ const ProfilePage = () => {
                           )}
                         </div>
                         {/* Email (Disabled) */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                        <div className="sm:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Email
                           </label>
                           <input
@@ -854,12 +858,12 @@ const ProfilePage = () => {
                             name="email"
                             value={newAddressFormData.email}
                             disabled={true}
-                            className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md bg-gray-200 text-gray-500 cursor-not-allowed"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-200 text-gray-500 cursor-not-allowed text-sm sm:text-base"
                           />
                         </div>
                         {/* Address Line 1 */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                        <div className="sm:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Address Line 1
                           </label>
                           <input
@@ -867,7 +871,7 @@ const ProfilePage = () => {
                             name="addressLine1"
                             value={newAddressFormData.addressLine1}
                             onChange={handleAddressInputChange}
-                            className={`text-black w-full px-3 py-2 mt-1 border rounded-md ${
+                            className={`text-black w-full px-3 py-2 border rounded-md text-sm sm:text-base ${
                               addressErrors.addressLine1
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -880,8 +884,8 @@ const ProfilePage = () => {
                           )}
                         </div>
                         {/* Address Line 2 */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                        <div className="sm:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Address Line 2 (Optional)
                           </label>
                           <input
@@ -889,12 +893,12 @@ const ProfilePage = () => {
                             name="addressLine2"
                             value={newAddressFormData.addressLine2}
                             onChange={handleAddressInputChange}
-                            className="text-black w-full px-3 py-2 mt-1 border border-gray-300 rounded-md"
+                            className="text-black w-full px-3 py-2 border border-gray-300 rounded-md text-sm sm:text-base"
                           />
                         </div>
                         {/* City */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             City
                           </label>
                           <input
@@ -902,7 +906,7 @@ const ProfilePage = () => {
                             name="city"
                             value={newAddressFormData.city}
                             onChange={handleAddressInputChange}
-                            className={`w-full px-3 py-2 mt-1 border rounded-md text-black ${
+                            className={`w-full px-3 py-2 border rounded-md text-black text-sm sm:text-base ${
                               addressErrors.city
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -916,7 +920,7 @@ const ProfilePage = () => {
                         </div>
                         {/* State */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             State
                           </label>
                           <input
@@ -924,7 +928,7 @@ const ProfilePage = () => {
                             name="state"
                             value={newAddressFormData.state}
                             onChange={handleAddressInputChange}
-                            className={`w-full px-3 py-2 mt-1 border rounded-md text-black ${
+                            className={`w-full px-3 py-2 border rounded-md text-black text-sm sm:text-base ${
                               addressErrors.state
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -937,8 +941,8 @@ const ProfilePage = () => {
                           )}
                         </div>
                         {/* Pincode */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                        <div className="sm:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Pincode
                           </label>
                           <input
@@ -946,7 +950,7 @@ const ProfilePage = () => {
                             name="pincode"
                             value={newAddressFormData.pincode}
                             onChange={handleAddressInputChange}
-                            className={`w-full px-3 py-2 mt-1 border rounded-md text-black${
+                            className={`w-full px-3 py-2 border rounded-md text-black text-sm sm:text-base ${
                               addressErrors.pincode
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -959,7 +963,7 @@ const ProfilePage = () => {
                           )}
                         </div>
                         {/* Is Default Checkbox */}
-                        <div className="md:col-span-2">
+                        <div className="sm:col-span-2">
                           <div className="flex items-center">
                             <input
                               type="checkbox"
@@ -978,16 +982,16 @@ const ProfilePage = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex justify-end gap-2 mt-4">
+                      <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-2 mt-4">
                         <button
                           onClick={handleCancelAddressEdit}
-                          className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100"
+                          className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 text-sm sm:text-base"
                         >
                           Cancel
                         </button>
                         <button
                           onClick={saveAddress}
-                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm sm:text-base"
                         >
                           <Save className="w-4 h-4 inline-block mr-2" />
                           Save Address
@@ -1001,8 +1005,8 @@ const ProfilePage = () => {
               {/* Coupons Tab */}
               {activeTab === "coupons" && !isAdmin && (
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-black">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <h2 className="text-lg sm:text-xl font-semibold text-black">
                       My Coupons & Rewards
                     </h2>
                     {loadingCoupons && (
@@ -1016,26 +1020,26 @@ const ProfilePage = () => {
                           key={i}
                           className="border rounded-lg p-4 animate-pulse"
                         >
-                          <div className="flex items-center justify-between">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div className="flex items-center gap-4">
-                              <div className="bg-gray-200 p-3 rounded-lg w-12 h-12"></div>
-                              <div>
+                              <div className="bg-gray-200 p-3 rounded-lg w-12 h-12 flex-shrink-0"></div>
+                              <div className="min-w-0 flex-1">
                                 <div className="h-5 bg-gray-200 rounded w-24 mb-2"></div>
-                                <div className="h-4 bg-gray-200 rounded w-48"></div>
+                                <div className="h-4 bg-gray-200 rounded w-full max-w-48"></div>
                               </div>
                             </div>
-                            <div className="h-8 bg-gray-200 rounded w-20"></div>
+                            <div className="h-8 bg-gray-200 rounded w-20 flex-shrink-0"></div>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : coupons.length === 0 ? (
-                    <div className="text-center py-12">
-                      <Gift className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    <div className="text-center py-8 sm:py-12">
+                      <Gift className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
                         No Coupons Available
                       </h3>
-                      <p className="text-gray-500">
+                      <p className="text-gray-500 text-sm sm:text-base px-4">
                         Check back later for exciting offers and discounts!
                       </p>
                     </div>
@@ -1056,45 +1060,47 @@ const ProfilePage = () => {
                                 : "border-green-200 bg-green-50 hover:bg-green-100"
                             }`}
                           >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                              <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0 flex-1">
                                 <div
-                                  className={`p-3 rounded-lg ${
+                                  className={`p-2 sm:p-3 rounded-lg flex-shrink-0 ${
                                     coupon.used || isExpired
                                       ? "bg-gray-200"
                                       : "bg-white"
                                   }`}
                                 >
                                   <IconComponent
-                                    className={`w-6 h-6 ${
+                                    className={`w-5 h-5 sm:w-6 sm:h-6 ${
                                       coupon.used || isExpired
                                         ? "text-gray-400"
                                         : "text-green-600"
                                     }`}
                                   />
                                 </div>
-                                <div>
+                                <div className="min-w-0 flex-1">
                                   <h3
-                                    className={`font-semibold flex items-center gap-2 ${
+                                    className={`font-semibold flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm sm:text-base ${
                                       coupon.used || isExpired
                                         ? "text-gray-500"
                                         : "text-gray-900"
                                     }`}
                                   >
-                                    {coupon.code}
-                                    {isExpired && (
-                                      <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
-                                        Expired
-                                      </span>
-                                    )}
-                                    {coupon.used && (
-                                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                        Used
-                                      </span>
-                                    )}
+                                    <span className="break-all">{coupon.code}</span>
+                                    <div className="flex gap-1 flex-wrap">
+                                      {isExpired && (
+                                        <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                                          Expired
+                                        </span>
+                                      )}
+                                      {coupon.used && (
+                                        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                                          Used
+                                        </span>
+                                      )}
+                                    </div>
                                   </h3>
                                   <p
-                                    className={`text-sm ${
+                                    className={`text-xs sm:text-sm break-words ${
                                       coupon.used || isExpired
                                         ? "text-gray-400"
                                         : "text-gray-600"
@@ -1122,21 +1128,21 @@ const ProfilePage = () => {
                                   )}
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-2 w-full sm:w-auto">
                                 {coupon.used ? (
-                                  <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium">
+                                  <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs sm:text-sm font-medium w-full sm:w-auto justify-center">
                                     <CheckCircle className="w-4 h-4" />
                                     Used
                                   </div>
                                 ) : isExpired ? (
-                                  <span className="text-xs bg-red-100 text-red-600 px-3 py-1 rounded-full">
+                                  <span className="text-xs bg-red-100 text-red-600 px-3 py-1 rounded-full w-full sm:w-auto text-center">
                                     Expired
                                   </span>
                                 ) : (
                                   <button
                                     onClick={() => handleCopyCode(coupon.code)}
                                     disabled={!canUse}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                    className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors w-full sm:w-auto ${
                                       copiedCode === coupon.code
                                         ? "bg-green-600 text-white"
                                         : canUse
@@ -1161,7 +1167,7 @@ const ProfilePage = () => {
                             </div>
                             {canUse && coupon.minCartValue > 0 && (
                               <div className="mt-3 pt-3 border-t border-green-200">
-                                <p className="text-sm text-green-700">
+                                <p className="text-xs sm:text-sm text-green-700 break-words">
                                   <ShoppingBag className="w-4 h-4 inline mr-1" />
                                   Minimum order value: ₹{coupon.minCartValue}
                                 </p>
@@ -1171,14 +1177,14 @@ const ProfilePage = () => {
                               coupon.maxDiscountValue &&
                               coupon.type === "percentage" && (
                                 <div className="mt-3 pt-3 border-t border-green-200">
-                                  <p className="text-sm text-green-700">
+                                  <p className="text-xs sm:text-sm text-green-700">
                                     Maximum discount: ₹{coupon.maxDiscountValue}
                                   </p>
                                 </div>
                               )}
                             {coupon.description && (
                               <div className="mt-3 pt-3 border-t border-gray-200">
-                                <p className="text-sm text-gray-600">
+                                <p className="text-xs sm:text-sm text-gray-600 break-words">
                                   {coupon.description}
                                 </p>
                               </div>
@@ -1191,12 +1197,12 @@ const ProfilePage = () => {
                   {!loadingCoupons && coupons.length > 0 && (
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <div className="flex items-start gap-3">
-                        <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
-                        <div>
-                          <h4 className="font-medium text-blue-900 mb-2">
+                        <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-medium text-blue-900 mb-2 text-sm sm:text-base">
                             How to use your coupons:
                           </h4>
-                          <ul className="text-sm text-blue-800 space-y-1">
+                          <ul className="text-xs sm:text-sm text-blue-800 space-y-1">
                             <li>
                               • Copy the coupon code and apply it during
                               checkout
