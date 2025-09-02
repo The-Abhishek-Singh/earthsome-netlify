@@ -272,11 +272,15 @@ export default function ComboProductDetailPage() {
   const discountPercentage = comboOffer.discountPercentage;
 
   // Get all images from all products in the combo
-  const allComboImages = comboOffer.comboProducts.flatMap(product => 
-    [product.productImageURL, ...(product.images || [])]
-  ).filter((url, index, self) => 
-    url && self.indexOf(url) === index
-  );
+  // const allComboImages = comboOffer.comboProducts.flatMap(product => 
+  //   [product.productImageURL, ...(product.images || [])]
+  // ).filter((url, index, self) => 
+  //   url && self.indexOf(url) === index
+  // );
+  const allComboImages = comboOffer.comboProducts
+  .map(product => product.productImageURL)
+  .filter((url, index, self) => url && self.indexOf(url) === index);
+
 
   return (
     <div id="combo-page-top" className="min-h-screen bg-white mb-[900px] sm:mb-[700px] md:mb-[600px] lg:mb-[485px]">
@@ -290,7 +294,7 @@ export default function ComboProductDetailPage() {
       )}
 
       {/* Back Button */}
-      <div className="max-w-6xl mx-auto px-6 pt-8 my-20">
+      <div className="max-w-6xl mx-auto px-6 pt-8 mt-20">
         <button
           onClick={() => router.back()}
           className="inline-flex items-center gap-2 text-gray-500 hover:text-green-600 transition-colors duration-200 mb-8 font-medium"
@@ -308,7 +312,7 @@ export default function ComboProductDetailPage() {
             <div className="sticky top-8">
               <ImageGallery 
                 images={allComboImages} 
-                productName={comboOffer.title}
+                // productName={comboOffer.title}
                 selectedIndex={selectedImageIndex}
                 onSelectImage={setSelectedImageIndex}
               />
@@ -361,7 +365,7 @@ export default function ComboProductDetailPage() {
                   </span>
                 </div>
                 <p className="text-green-600 text-sm font-medium">
-                  You save ₹{totalSavings.toFixed(2)} with this combo
+                  You&apos;ll save ₹{totalSavings.toFixed(2)} with this combo
                 </p>
               </div>
 

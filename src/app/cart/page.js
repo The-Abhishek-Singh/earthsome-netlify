@@ -701,8 +701,8 @@ const CartPage = () => {
                               item.originalPrice > item.price && (
                                 <div className="text-sm text-green-600 font-medium">
                                   Save ₹
-                                  {(item.originalPrice - item.price) *
-                                    (item.quantity - (item.bogoFreeItems || 0))}
+                                  {((item.originalPrice - item.price) *
+                                    (item.quantity - (item.bogoFreeItems || 0))).toFixed(2)}
                                 </div>
                               )}
                             {item.bogoFreeItems > 0 && (
