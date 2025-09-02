@@ -1,149 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, ChevronDown, LogOut, User } from "lucide-react";
 import SearchModal from "../UI/SearchModal";
 import { useCart } from "@/context/CartContext";
-import dynamic from "next/dynamic";
-
-// Create a client-only component for navigation links
-const NavigationLinks = dynamic(() => Promise.resolve(({ items, productDropdownItems, handleLinkClick, isMenuOpen, productDropdownOpen, setProductDropdownOpen }) => {
-  const { usePathname } = require("next/navigation");
-  const pathname = usePathname();
-
-  // Function to check if a link is active
-  const isActiveLink = (link) => {
-    if (link === "/") {
-      return pathname === "/";
-    }
-    return pathname.startsWith(link);
-  };
-
-  // Function to check if Products dropdown should be active
-  const isProductsActive = () => {
-    return productDropdownItems.some(item => isActiveLink(item.link)) || isActiveLink("/all-product");
-  };
-
-  return (
-    <>
-      {/* Desktop Navigation */}
-      <div className="hidden lg:flex items-center justify-center gap-6 xl:gap-9">
-        {items.map((item) =>
-          item.title === "Products" ? (
-            <div key={item.title} className="relative group">
-              <div className={`flex items-center gap-1 text-md font-medium cursor-pointer transition-colors ${
-                isProductsActive() ? "text-green-600" : "text-black group-hover:text-green-600"
-              }`}>
-                <Link href={item.link} className="py-1">
-                  {item.title}
-                </Link>
-                <ChevronDown className="w-4 h-4" />
-              </div>
-              <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-md rounded-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-300 z-50 py-1">
-                {productDropdownItems.map((subItem) => (
-                  <Link
-                    key={subItem.title}
-                    href={subItem.link}
-                    className={`block px-4 py-2 text-md hover:bg-gray-100 hover:text-green-600 ${
-                      isActiveLink(subItem.link) ? "text-green-600" : "text-gray-700"
-                    }`}
-                  >
-                    {subItem.title}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <Link
-              key={item.title}
-              href={item.link}
-              className={`relative py-1 text-md font-medium group transition-colors ${
-                isActiveLink(item.link) ? "text-green-600" : "text-black hover:text-green-600"
-              }`}
-            >
-              <span>{item.title}</span>
-              <span className={`absolute left-0 bottom-0 h-[2px] bg-green-500 transition-all duration-300 ${
-                isActiveLink(item.link) ? "w-full" : "w-0 group-hover:w-full"
-              }`}></span>
-            </Link>
-          )
-        )}
-      </div>
-
-      {/* Mobile Navigation */}
-      <div
-        className={`fixed inset-x-0 top-24 bg-white/95 backdrop-blur-sm border-b border-gray-200 lg:hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen
-            ? "opacity-100 visible"
-            : "opacity-0 invisible pointer-events-none"
-        }`}
-        style={{
-          maxHeight: isMenuOpen ? "calc(100vh - 6rem)" : "0",
-          overflowY: "auto",
-        }}
-      >
-        <div className="px-4 py-2 space-y-1 mt-2 mb-4">
-          {items.map((item) =>
-            item.title === "Products" ? (
-              <div key={item.title} className="flex flex-col gap-1">
-                <div className="flex justify-between items-center w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
-                  <Link
-                    href={item.link}
-                    onClick={handleLinkClick}
-                    className={`text-sm font-medium flex-grow transition-colors ${
-                      isProductsActive() ? "text-green-600" : "text-black hover:text-green-600"
-                    }`}
-                  >
-                    {item.title}
-                  </Link>
-                  <button
-                    onClick={() => setProductDropdownOpen(!productDropdownOpen)}
-                    className="p-1 -mr-1"
-                  >
-                    <ChevronDown
-                      className={`w-5 h-5 transition-transform ${
-                        productDropdownOpen ? "rotate-180" : "rotate-0"
-                      }`}
-                    />
-                  </button>
-                </div>
-                {productDropdownOpen && (
-                  <div className="ml-4 mt-1 flex flex-col gap-1 border-l-2 border-gray-200 pl-3">
-                    {productDropdownItems.map((subItem) => (
-                      <Link
-                        key={subItem.title}
-                        href={subItem.link}
-                        onClick={handleLinkClick}
-                        className={`block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors ${
-                          isActiveLink(subItem.link) ? "text-green-600" : "text-gray-700 hover:text-green-600"
-                        }`}
-                      >
-                        {subItem.title}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link
-                key={item.title}
-                href={item.link}
-                onClick={handleLinkClick}
-                className={`block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors ${
-                  isActiveLink(item.link) ? "text-green-600" : "text-black hover:text-green-600"
-                }`}
-              >
-                {item.title}
-              </Link>
-            )
-          )}
-        </div>
-      </div>
-    </>
-  );
-}), { ssr: false });
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -152,6 +15,7 @@ const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -175,7 +39,12 @@ const Navbar = () => {
   }, []);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const handleLinkClick = () => isMenuOpen && setIsMenuOpen(false);
+  const handleLinkClick = () => {
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+    setProductDropdownOpen(false);
+  };
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/" });
@@ -207,11 +76,24 @@ const Navbar = () => {
   );
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
+  // Function to check if a link is active
+  const isActiveLink = (link) => {
+    if (link === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(link);
+  };
+
+  // Function to check if Products dropdown should be active
+  const isProductsActive = () => {
+    return productDropdownItems.some(item => isActiveLink(item.link)) || isActiveLink("/all-product");
+  };
+
   const AuthButton = () => {
     if (status === "loading") {
       return (
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+        <div className="flex items-center gap-2 min-w-[44px] justify-center">
+          <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse flex-shrink-0"></div>
           <span className="text-sm font-medium hidden lg:block text-gray-400">
             Loading...
           </span>
@@ -223,9 +105,9 @@ const Navbar = () => {
       return (
         <Link
           href="/Login"
-          className="flex items-center gap-2 text-black hover:text-green-600 transition-colors"
+          className="flex items-center gap-2 text-black hover:text-green-600 transition-colors min-w-[44px] justify-center lg:justify-start"
         >
-          <div className="p-2 hover:bg-gray-100 rounded-full">
+          <div className="p-2 hover:bg-gray-100 rounded-full flex-shrink-0">
             <User className="w-[22px] h-[22px]" />
           </div>
           <span className="text-md font-medium hidden lg:block">Login</span>
@@ -234,12 +116,12 @@ const Navbar = () => {
     }
 
     return (
-      <div className="profile-dropdown-container relative">
+      <div className="profile-dropdown-container relative min-w-[44px]">
         <button
           onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-          className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors"
+          className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors min-w-[44px] justify-center lg:justify-start w-full"
         >
-          <div className="relative">
+          <div className="relative flex-shrink-0">
             {session.user.image ? (
               <Image
                 src={session.user.image}
@@ -250,7 +132,7 @@ const Navbar = () => {
                 priority
               />
             ) : (
-              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
                 <User className="w-4 h-4 text-gray-600" />
               </div>
             )}
@@ -258,7 +140,7 @@ const Navbar = () => {
           <span className="text-sm font-medium hidden lg:block max-w-[100px] truncate">
             {session.user.name || session.user.email}
           </span>
-          <ChevronDown className="w-4 h-4 hidden lg:block" />
+          <ChevronDown className="w-4 h-4 hidden lg:block flex-shrink-0" />
         </button>
 
         {profileDropdownOpen && (
@@ -316,21 +198,55 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Center Navigation - Dynamic component */}
-          <NavigationLinks 
-            items={items}
-            productDropdownItems={productDropdownItems}
-            handleLinkClick={handleLinkClick}
-            isMenuOpen={isMenuOpen}
-            productDropdownOpen={productDropdownOpen}
-            setProductDropdownOpen={setProductDropdownOpen}
-          />
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center justify-center gap-6 xl:gap-9">
+            {items.map((item) =>
+              item.title === "Products" ? (
+                <div key={item.title} className="relative group">
+                  <div className={`flex items-center gap-1 text-md font-medium cursor-pointer transition-colors ${
+                    isProductsActive() ? "text-green-600" : "text-black group-hover:text-green-600"
+                  }`}>
+                    <Link href={item.link} className="py-1">
+                      {item.title}
+                    </Link>
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-md rounded-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-300 z-50 py-1">
+                    {productDropdownItems.map((subItem) => (
+                      <Link
+                        key={subItem.title}
+                        href={subItem.link}
+                        className={`block px-4 py-2 text-md hover:bg-gray-100 hover:text-green-600 ${
+                          isActiveLink(subItem.link) ? "text-green-600" : "text-gray-700"
+                        }`}
+                      >
+                        {subItem.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  key={item.title}
+                  href={item.link}
+                  className={`relative py-1 text-md font-medium group transition-colors ${
+                    isActiveLink(item.link) ? "text-green-600" : "text-black hover:text-green-600"
+                  }`}
+                >
+                  <span>{item.title}</span>
+                  <span className={`absolute left-0 bottom-0 h-[2px] bg-green-500 transition-all duration-300 ${
+                    isActiveLink(item.link) ? "w-full" : "w-0 group-hover:w-full"
+                  }`}></span>
+                </Link>
+              )
+            )}
+          </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-2 md:gap-8">
+          <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
             <AuthButton />
             <SearchModal />
-            <Link href="/cart" className="group">
+            <Link href="/cart" className="group flex-shrink-0">
               <div className="relative flex items-center md:gap-2.5 bg-black hover:bg-gray-800 rounded-full transition-all duration-200 shadow-sm hover:shadow-md justify-center">
                 {/* Mobile Cart */}
                 <div className="flex md:hidden items-center px-3.5 py-2.5">
@@ -377,26 +293,120 @@ const Navbar = () => {
             {/* Hamburger */}
             <button
               onClick={toggleMenu}
-              className="p-1 md:p-2 rounded-lg text-green-700 lg:hidden border border-green-500 hover:bg-green-100 transition-colors"
+              className="p-1 md:p-2 rounded-lg text-green-700 lg:hidden border border-green-500 hover:bg-green-100 transition-colors flex-shrink-0"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Auth Section */}
-        {isMenuOpen && session?.user && (
-          <div className="lg:hidden border-t border-gray-200 pt-2 mt-2 px-4 pb-4">
-            <div className="flex items-center gap-3 px-3 py-2">
-              {/* Mobile auth content can go here if needed */}
-            </div>
+        {/* Mobile Navigation */}
+        <div
+          className={`fixed inset-x-0 top-24 bg-white/95 backdrop-blur-sm border-b border-gray-200 lg:hidden transition-all duration-300 ease-in-out ${
+            isMenuOpen
+              ? "opacity-100 visible"
+              : "opacity-0 invisible pointer-events-none"
+          }`}
+          style={{
+            maxHeight: isMenuOpen ? "calc(100vh - 6rem)" : "0",
+            overflowY: "auto",
+          }}
+        >
+          <div className="px-4 py-2 space-y-1 mt-2 mb-4">
+            {items.map((item) =>
+              item.title === "Products" ? (
+                <div key={item.title} className="flex flex-col gap-1">
+                  <button
+                    type="button"
+                    className={`flex justify-between items-center w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm font-medium ${
+                      isProductsActive() ? "text-green-600" : "text-black hover:text-green-600"
+                    }`}
+                    onClick={() => setProductDropdownOpen(!productDropdownOpen)}
+                  >
+                    <span>{item.title}</span>
+                    <ChevronDown
+                      className={`w-5 h-5 transition-transform duration-200 ${
+                        productDropdownOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                    />
+                  </button>
+                  <div
+                    className={`ml-4 overflow-hidden transition-all duration-300 ease-in-out ${
+                      productDropdownOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                    }`}
+                  >
+                    <div className="mt-1 flex flex-col gap-1 border-l-2 border-gray-200 pl-3">
+                      {productDropdownItems.map((subItem) => (
+                        <Link
+                          key={subItem.title}
+                          href={subItem.link}
+                          onClick={handleLinkClick}
+                          className={`block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors ${
+                            isActiveLink(subItem.link) ? "text-green-600" : "text-gray-700 hover:text-green-600"
+                          }`}
+                        >
+                          {subItem.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  key={item.title}
+                  href={item.link}
+                  onClick={handleLinkClick}
+                  className={`block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors ${
+                    isActiveLink(item.link) ? "text-green-600" : "text-black hover:text-green-600"
+                  }`}
+                >
+                  {item.title}
+                </Link>
+              )
+            )}
           </div>
-        )}
+
+          {/* Mobile Auth Section */}
+          {session?.user && (
+            <div className="border-t border-gray-200 pt-2 mt-2 px-4 pb-4">
+              <div className="flex items-center gap-3 px-3 py-2">
+                <div className="relative flex-shrink-0">
+                  {session.user.image ? (
+                    <Image
+                      src={session.user.image}
+                      alt="Profile"
+                      width={32}
+                      height={32}
+                      className="w-8 h-8 rounded-full border-2 border-gray-200"
+                      priority
+                    />
+                  ) : (
+                    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-gray-600" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-grow min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {session.user.name}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {session.user.email}
+                  </p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );
 };
-
-// "use client";
 
 export default Navbar;

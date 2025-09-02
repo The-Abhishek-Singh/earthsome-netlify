@@ -9,7 +9,7 @@ const EarthsomeLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fef6f1] flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-10  mb-[1000px] sm:mb-[550px] md:mb-[599px]  lg:mb-[422px]">
+    <div className="min-h-screen bg-[#fef6f1] flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-10 ">
       <div className="max-w-md w-full space-y-8 animate-fade-in">
         {/* Brand Logo/Icon */}
         <div className="text-center">
