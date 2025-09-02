@@ -546,6 +546,30 @@ const ShippingForm = () => {
       } else if (showAddressForm) {
         if (!validateForm()) return;
         orderAddress = { userInfo: formData };
+
+        // Save address for future use if checkbox is checked and no saved addresses exist
+        if (formData.isDefault && savedAddresses.length === 0) {
+          try {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+            const payload = {
+              ...formData,
+              userId: session.user.id,
+            };
+            const response = await fetch(`${API_URL}/api/addresses`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            const data = await response.json();
+            if (data.success) {
+              setSavedAddresses([data.address]);
+            } else {
+              console.error("Failed to save address for future use:", data.message);
+            }
+          } catch (error) {
+            console.error("Error saving address for future use:", error);
+          }
+        }
       }
     } else {
       if (!validateForm()) return;
