@@ -1,12 +1,28 @@
 "use client";
-import React from 'react';
-import {signIn, singnIn} from 'next-auth/react';
+
+import React, { useEffect } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 const EarthsomeLogin = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/");
+    }
+  }, [status, router]);
+
   const handleGoogleLogin = () => {
     signIn("google", { callbackUrl: `${window.location.origin}/` });
   };
+
+  // Optionally show a loading spinner while redirecting
+  if (status === "loading" || status === "authenticated") {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-[#fef6f1] flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-10 ">
