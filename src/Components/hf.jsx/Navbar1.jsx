@@ -277,10 +277,11 @@ const Navbar = () => {
                       className="filter brightness-0 invert"
                       priority
                     />
-                    {totalItems > 0 && (
+                    {cartItems.length > 0 && (
                       <div className="absolute -top-2 -right-2 min-w-[20px] h-5 bg-green-400 text-black text-xs font-bold rounded-full flex items-center justify-center px-1 border border-black">
-                        {totalItems > 99 ? "99+" : totalItems}
+                        {cartItems.length > 99 ? "99+" : cartItems.length}
                       </div>
+                      //  <span className="text-sm">{cartItems.length} items</span>
                     )}
                   </div>
                   <span className="text-white text-sm font-semibold">
