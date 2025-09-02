@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragCurrentX, setDragCurrentX] = useState(0);
@@ -12,6 +11,7 @@ export default function Home() {
   const containerRef = useRef(null);
   const autoSlideRef = useRef(null);
   const isMouseDown = useRef(false);
+  const lastSlideChangeTime = useRef(0);
   
   // Sample carousel data
   const slides = [
@@ -52,13 +52,9 @@ export default function Home() {
     return () => stopAutoSlide();
   }, []);
 
+  // Track slide changes for timing
   useEffect(() => {
-    setIsAnimating(true);
-    const timer = setTimeout(() => {
-      setIsAnimating(false);
-    }, 1000);
-    
-    return () => clearTimeout(timer);
+    lastSlideChangeTime.current = Date.now();
   }, [currentSlide]);
 
   // Touch/Mouse event handlers
@@ -148,7 +144,7 @@ export default function Home() {
   };
 
   const goToSlide = (index) => {
-    if (isAnimating) return;
+    // Remove animation blocking - allow immediate slide changes
     setCurrentSlide(index);
     stopAutoSlide();
     setTimeout(() => {
@@ -157,12 +153,12 @@ export default function Home() {
   };
 
   const goToNextSlide = () => {
-    if (isAnimating) return;
+    // Remove animation blocking - allow immediate slide changes
     setCurrentSlide((currentSlide + 1) % slides.length);
   };
 
   const goToPrevSlide = () => {
-    if (isAnimating) return;
+    // Remove animation blocking - allow immediate slide changes
     setCurrentSlide((currentSlide - 1 + slides.length) % slides.length);
   };
 
@@ -229,6 +225,21 @@ export default function Home() {
     }
   };
 
+  // Enhanced background scale calculation for better zoom effect
+  const getBackgroundScale = (index) => {
+    const isCurrentSlide = index === currentSlide;
+    const timeSinceLastChange = Date.now() - lastSlideChangeTime.current;
+    const isRecentChange = timeSinceLastChange < 100; // Recent slide change
+    
+    if (isCurrentSlide && !isDragging) {
+      // For current slide: start slightly zoomed and scale down for smooth effect
+      return isRecentChange ? 'scale(1.0)' : 'scale(0.95)';
+    } else {
+      // For non-current slides: keep slightly zoomed out
+      return 'scale(1.1)';
+    }
+  };
+
   return (
     <>
     <Link href={slides[currentSlide].link}>
@@ -255,6 +266,7 @@ export default function Home() {
             const opacity = getSlideOpacity(index);
             const zIndex = getSlideZIndex(index);
             const isCurrentSlide = index === currentSlide;
+            const backgroundScale = getBackgroundScale(index);
             
             return (
               <div
@@ -266,20 +278,20 @@ export default function Home() {
                   zIndex: zIndex,
                   transition: isDragging 
                     ? 'opacity 0.3s ease, z-index 0s' 
-                    : 'all 1s cubic-bezier(0.23, 1, 0.32, 1)',
+                    : 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)', // Slightly faster transition
                   transformOrigin: 'center center',
                 }}
               >
-                {/* Background image with PROPERLY FIXED zoom effect */}
-                
+                {/* Background image with optimized zoom effect */}
                 <div 
                   className="absolute inset-0 bg-cover bg-center"
                   style={{ 
                     backgroundImage: `url(${slide.imageUrl})`,
                     backgroundPosition: 'center',
-                    // REVERSED LOGIC: Non-active slides zoom out slightly, active slide stays normal
-                    transform: isCurrentSlide && !isDragging ? 'scale(0.95)' : 'scale(1.1)',
-                    transition: 'transform 1.2s cubic-bezier(0.23, 1, 0.32, 1)',
+                    transform: backgroundScale,
+                    transition: isDragging 
+                      ? 'none' 
+                      : 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)', // Faster, smoother transition
                   }}
                 ></div>
                 
@@ -287,7 +299,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 z-10"
                      style={{
                        opacity: isCurrentSlide ? 1 : 0.8,
-                       transition: 'opacity 0.8s ease',
+                       transition: 'opacity 0.6s ease', // Faster opacity transition
                      }}>
                 </div>
                 
