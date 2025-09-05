@@ -5,6 +5,9 @@ import React from 'react';
 const MarqueeSection = () => {
   return (
     <>
+
+     
+
       <div className="w-full py-16 px-4 overflow-hidden">
         <div className="max-w-full mx-auto">
           <div className="flex items-center gap-8">

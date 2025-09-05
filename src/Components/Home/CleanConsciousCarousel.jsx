@@ -1,45 +1,71 @@
-"use client";
-import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+'use client';
+import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
 
-export default function Home() {
+export default function CleanConsciousCarousel() {
   const [currentIndex, setCurrentIndex] = useState(1); // Start at 1 (first real slide)
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragCurrentX, setDragCurrentX] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
+  const [playingVideo, setPlayingVideo] = useState(null);
   const containerRef = useRef(null);
   const autoSlideRef = useRef(null);
   const isMouseDown = useRef(false);
-
-  // Sample carousel data
+  
+  // Updated carousel data with nature videos and GIFs
   const slides = [
     {
       id: 1,
-      imageUrl: "/Banner1.png",
-      link: "",
+      type: 'video',
+      mediaUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      title: "Clean Ocean Waters",
+      description: "Protecting marine ecosystems through conscious choices",
+      link: ""
     },
-    {
-      id: 2,
-      imageUrl: "/Banner2.png",
-      link: "",
-    },
-    {
-      id: 3,
-      imageUrl: "/Banner3.png",
-      link: "",
-    },
+    // {
+    //   id: 2,
+    //   type: 'gif',
+    //   mediaUrl: "https://media.giphy.com/media/26BRuo6sLetdllPAQ/giphy.gif",
+    //   title: "Forest Conservation",
+    //   description: "Sustainable practices for wildlife protection",
+    //   link: ""
+    // },
+    // {
+    //   id: 3,
+    //   type: 'video',
+    //   mediaUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    //   title: "Cruelty-Free Living",
+    //   description: "Ethical beauty without compromising nature",
+    //   link: ""
+    // },
+    // {
+    //   id: 4,
+    //   type: 'gif',
+    //   mediaUrl: "https://media.giphy.com/media/l2JhOVy5NvYhiBnlS/giphy.gif",
+    //   title: "Organic Farming",
+    //   description: "Natural cultivation supporting biodiversity",
+    //   link: ""
+    // },
+    // {
+    //   id: 5,
+    //   type: 'video',
+    //   mediaUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    //   title: "Renewable Energy",
+    //   description: "Clean energy for conscious consumers",
+    //   link: ""
+    // }
   ];
 
-  // Create extended slides array: [last, 1, 2, 3, first]
+  // Create extended slides array: [last, 1, 2, 3, 4, 5, first]
   const extendedSlides = [
     slides[slides.length - 1], // Clone of last slide (index 0)
-    ...slides, // Original slides (index 1-3)
-    slides[0], // Clone of first slide (index 4)
+    ...slides,                 // Original slides (index 1-5)
+    slides[0]                  // Clone of first slide (index 6)
   ];
 
-  // Get the actual slide index for indicators (0-2)
+  // Get the actual slide index for indicators (0-4)
   const getActualIndex = () => {
     if (currentIndex === 0) return slides.length - 1; // Clone of last -> show last indicator
     if (currentIndex === extendedSlides.length - 1) return 0; // Clone of first -> show first indicator
@@ -56,7 +82,7 @@ export default function Home() {
     // After transition completes, handle infinite loop repositioning
     setTimeout(() => {
       setIsTransitioning(false);
-
+      
       // Instant repositioning without animation
       if (newIndex === 0) {
         // We're at the clone of last slide, jump to real last slide
@@ -104,7 +130,7 @@ export default function Home() {
   const goToSlide = (index) => {
     const targetIndex = index + 1; // Add 1 because we have a clone at index 0
     if (targetIndex === currentIndex || isTransitioning) return;
-
+    
     stopAutoSlide();
     changeSlide(targetIndex);
 
@@ -116,13 +142,9 @@ export default function Home() {
 
   // Touch/Mouse event handlers
   const handleDragStart = (clientX) => {
-    if (isTransitioning) return;
-    setIsDragging(true);
-    setDragStartX(clientX);
-    setDragCurrentX(clientX);
-    setDragOffset(0);
-    isMouseDown.current = true;
-    stopAutoSlide();
+    
+  
+
   };
 
   const handleDragMove = (clientX) => {
@@ -155,9 +177,7 @@ export default function Home() {
     }
 
     // Restart auto-slide
-    setTimeout(() => {
-      startAutoSlide();
-    }, 1000);
+   
   };
 
   // Mouse events
@@ -207,14 +227,26 @@ export default function Home() {
     }
   };
 
+  const handleVideoPlay = (videoId) => {
+    setPlayingVideo(videoId);
+  };
+
+  const handleVideoPause = (videoId) => {
+    setPlayingVideo(null);
+  };
+
   return (
-    <div className="w-full max-w-[95%] mx-auto px-4 py-8 mt-10">
-      {/* Carousel Section */}
-      <div className="mb-6">
-        <Link href={slides[getActualIndex()].link}>
-          <div className="relative w-full h-64 md:h-80 lg:h-[65vh] overflow-hidden bg-orange-100 border-2 border-green-300 rounded-2xl select-none">
+    <div className="w-full  py-16">
+      <div className="max-w-[95%]  mx-auto px-4">
+        
+      
+
+        {/* Carousel Section */}
+        <div className="mb-6">
+          <div className="relative w-full h-80 md:h-96 lg:h-[400px] overflow-hidden bg-gradient-to-br from-orange-100 to-orange-200 border-2 border-green-500 rounded-3xl select-none shadow-lg">
+            
             {/* Carousel container */}
-            <div
+            <div 
               ref={containerRef}
               className="relative h-full w-full cursor-grab active:cursor-grabbing select-none"
               onMouseDown={handleMouseDown}
@@ -224,116 +256,67 @@ export default function Home() {
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
-              style={{ touchAction: "pan-y" }}
+              style={{ touchAction: 'pan-y' }}
             >
               {/* Slides Container */}
-              <div
+              <div 
                 className="flex transition-transform duration-300 ease-out h-full"
-                style={{
-                  transform: isDragging
-                    ? `translateX(calc(-${
-                        currentIndex * 100
-                      }% + ${dragOffset}px))`
-                    : `translateX(-${currentIndex * 100}%)`,
-                  transitionDuration: isTransitioning ? "300ms" : "0ms",
-                }}
+               
               >
                 {extendedSlides.map((slide, index) => (
                   <div
                     key={`${slide.id}-${index}`}
-                    className="w-full flex-shrink-0 h-full relative"
+                    className="w-full flex-shrink-0 h-full relative rounded-3xl overflow-hidden"
                   >
-                    {/* Background image */}
-                    <div
-                      className="absolute inset-0 bg-cover bg-center rounded-2xl"
-                      style={{
-                        backgroundImage: `url(${slide.imageUrl})`,
-                        backgroundPosition: "center",
-                      }}
-                    >
-                      {/* Subtle overlay */}
-                      <div className="absolute inset-0 bg-black/5 rounded-2xl"></div>
-                    </div>
+                    {/* Media Content */}
+                    {slide.type === 'video' ? (
+                      <video
+                        className="absolute inset-0 w-full h-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        onPlay={() => handleVideoPlay(slide.id)}
+                        onPause={() => handleVideoPause(slide.id)}
+                      >
+                        <source src={slide.mediaUrl} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : (
+                      <img
+                        src={slide.mediaUrl}
+                        alt={slide.title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    )}
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+
+                    {/* Content Overlay */}
+                    {/* <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
+                      <div className="max-w-xl">
+                        <h3 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
+                          {slide.title}
+                        </h3>
+                        <p className="text-white/90 text-base md:text-lg leading-relaxed">
+                          {slide.description}
+                        </p>
+                      </div>
+                    </div> */}
+
+                    
                   </div>
                 ))}
               </div>
 
-              {/* Navigation arrows - clean and minimal */}
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  goToPrevSlide();
-                }}
-                disabled={isTransitioning}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/90 hover:bg-white text-gray-600 p-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md opacity-80 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Previous slide"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-4 h-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 19.5L8.25 12l7.5-7.5"
-                  />
-                </svg>
-              </button>
-
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  goToNextSlide();
-                }}
-                disabled={isTransitioning}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/90 hover:bg-white text-gray-600 p-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md opacity-80 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Next slide"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-4 h-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                  />
-                </svg>
-              </button>
+             
             </div>
           </div>
-        </Link>
 
-        {/* Slide indicators - clean and minimal */}
-        <div className="flex justify-center mt-6">
-          <div className="flex space-x-1.5">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                disabled={isTransitioning}
-                className={`transition-all duration-300 rounded-full disabled:cursor-not-allowed ${
-                  index === getActualIndex()
-                    ? isDragging
-                      ? "bg-green-400 w-8 h-3"
-                      : "bg-green-400 w-6 h-2"
-                    : isDragging
-                    ? "bg-green-200 hover:bg-green-300 w-3 h-3"
-                    : "bg-green-200 hover:bg-green-300 w-2 h-2"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              ></button>
-            ))}
-          </div>
+         
         </div>
+
       </div>
     </div>
   );

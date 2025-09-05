@@ -4,16 +4,69 @@ import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ChevronDown, LogOut, User } from "lucide-react";
+import { Menu, X, LogOut, User } from "lucide-react";
 import SearchModal from "../UI/SearchModal";
 import { useCart } from "@/context/CartContext";
+
+// NavItems component that handles smooth hover effects like the reference
+const NavItems = ({ items }) => {
+  const pathname = usePathname();
+
+  const isActiveLink = (link) => {
+    if (link === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(link);
+  };
+
+  return (
+    <div className="hidden md:flex items-center justify-center flex-1">
+      <div className="flex items-center space-x-1">
+        {items.map((item, index) => (
+          <Link
+            key={index}
+            href={item.link}
+            className={`
+              relative px-4 py-2 text-sm font-medium transition-all duration-200 ease-out rounded-lg
+              group hover:text-white
+              ${isActiveLink(item.link) 
+                ? "text-white" 
+                : "text-white/80"
+              }
+            `}
+          >
+            <span className="relative z-10">
+              {item.title}
+            </span>
+            
+            {/* Hover underline effect - exactly like reference */}
+            <span 
+              className={`
+                absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-white 
+                transition-all duration-300 ease-out
+                ${isActiveLink(item.link) 
+                  ? "w-6" 
+                  : "w-0 group-hover:w-6"
+                }
+              `} 
+            />
+            
+            {/* Subtle hover background */}
+            <span 
+              className="absolute inset-0 bg-white/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" 
+            />
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const pathname = usePathname();
 
@@ -43,7 +96,6 @@ const Navbar = () => {
     if (isMenuOpen) {
       setIsMenuOpen(false);
     }
-    setProductDropdownOpen(false);
   };
 
   const handleLogout = () => {
@@ -60,12 +112,12 @@ const Navbar = () => {
   ];
 
   const productDropdownItems = [
+    { title: "Home", link: "/" },
+    { title: "All Products", link: "/all-product" },
     { title: "Gummies", link: "/category/Gummies" },
-    { title: "Protein & Energy", link: "/category/Protein%20%26%20Energy" },
     { title: "Wellness", link: "/category/Wellness" },
     { title: "Baby Care", link: "/category/Baby%20Care" },
     { title: "Personal Care", link: "/category/Personal%20Care" },
-    { title: "All Products", link: "/all-product" },
   ];
 
   const { cartItems } = useCart();
@@ -84,16 +136,11 @@ const Navbar = () => {
     return pathname.startsWith(link);
   };
 
-  // Function to check if Products dropdown should be active
-  const isProductsActive = () => {
-    return productDropdownItems.some(item => isActiveLink(item.link)) || isActiveLink("/all-product");
-  };
-
   const AuthButton = () => {
     if (status === "loading") {
       return (
-        <div className="flex items-center gap-2 min-w-[44px] justify-center">
-          <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse flex-shrink-0"></div>
+        <div className="flex items-center gap-2 min-w-[54px] justify-center">
+          <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse flex-shrink-0"></div>
           <span className="text-sm font-medium hidden lg:block text-gray-400">
             Loading...
           </span>
@@ -105,9 +152,9 @@ const Navbar = () => {
       return (
         <Link
           href="/Login"
-          className="flex items-center gap-2 text-black hover:text-green-600 transition-colors min-w-[44px] justify-center lg:justify-start"
+          className="flex items-center gap-2 text-black hover:text-green-600 transition-colors duration-200 min-w-[44px] justify-center lg:justify-start"
         >
-          <div className="p-2 hover:bg-gray-100 rounded-full flex-shrink-0">
+          <div className="p-2 hover:bg-gray-100 rounded-full flex-shrink-0 transition-colors duration-200">
             <User className="w-[22px] h-[22px]" />
           </div>
           <span className="text-md font-medium hidden lg:block">Login</span>
@@ -119,7 +166,7 @@ const Navbar = () => {
       <div className="profile-dropdown-container relative min-w-[44px]">
         <button
           onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-          className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors min-w-[44px] justify-center lg:justify-start w-full"
+          className="flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors duration-200 min-w-[44px] justify-center lg:justify-start w-full"
         >
           <div className="relative flex-shrink-0">
             {session.user.image ? (
@@ -128,19 +175,15 @@ const Navbar = () => {
                 alt="Profile"
                 width={32}
                 height={32}
-                className="w-8 h-8 rounded-full border-2 border-gray-200 hover:border-green-400 transition-colors"
+                className="w-10 h-10 rounded-full border-2 border-gray-200 hover:border-green-400 transition-colors duration-200"
                 priority
               />
             ) : (
-              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-200">
                 <User className="w-4 h-4 text-gray-600" />
               </div>
             )}
           </div>
-          <span className="text-sm font-medium hidden lg:block max-w-[100px] truncate">
-            {session.user.name || session.user.email}
-          </span>
-          <ChevronDown className="w-4 h-4 hidden lg:block flex-shrink-0" />
         </button>
 
         {profileDropdownOpen && (
@@ -155,7 +198,7 @@ const Navbar = () => {
             </div>
             <Link
               href="/Profile"
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600"
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600 transition-colors duration-200"
               onClick={() => setProfileDropdownOpen(false)}
             >
               <User className="w-4 h-4" />
@@ -163,7 +206,7 @@ const Navbar = () => {
             </Link>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"
             >
               <LogOut className="w-4 h-4" />
               Logout
@@ -175,202 +218,158 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      className={`w-full bg-white/60 backdrop-blur-md fixed top-0 left-0 transition-all duration-300 ease-in-out z-40 ${
-        isVisible
-          ? "opacity-100 pointer-events-auto"
-          : "opacity-0 pointer-events-none delay-200"
-      }`}
-    >
-      <div className="w-full px-2 md:px-4">
-        <div className="flex h-24 items-center justify-between lg:justify-around">
-          {/* Logo */}
-          <div className="flex items-center h-full w-[200px] xl:w-[250px]">
-            <Link href="/" className="flex items-center gap-2 h-full xl:p-3">
-              <Image
-                src="/logo.png"
-                alt="Careertronics"
-                width={120}
-                height={50}
-                className="w-full p-0"
-                priority
-              />
-            </Link>
-          </div>
+    <>
+      {/* Main Navbar */}
+      <nav
+        className={`w-full bg-white/60 backdrop-blur-md h-20 fixed top-0 left-0 transition-all duration-300 ease-in-out z-40 border-b-1 border-green-500 ${
+          isVisible
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none delay-200"
+        }`}
+      >
+        <div className="w-full px-4 md:px-6 lg:px-8">
+          <div className="flex h-20 items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center h-full md:ml-5">
+              <Link href="/" className="flex items-center h-full">
+                <Image
+                  src="/esicon.png"
+                  alt="Careertronics"
+                  width={140}
+                  height={80}
+                  className="h-12 w-auto"
+                  priority
+                />
+              </Link>
+            </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center justify-center gap-6 xl:gap-9">
-            {items.map((item) =>
-              item.title === "Products" ? (
-                <div key={item.title} className="relative group">
-                  <div className={`flex items-center gap-1 text-md font-medium cursor-pointer transition-colors ${
-                    isProductsActive() ? "text-green-600" : "text-black group-hover:text-green-600"
-                  }`}>
-                    <Link href={item.link} className="py-1">
-                      {item.title}
-                    </Link>
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-md rounded-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-300 z-50 py-1">
-                    {productDropdownItems.map((subItem) => (
-                      <Link
-                        key={subItem.title}
-                        href={subItem.link}
-                        className={`block px-4 py-2 text-md hover:bg-gray-100 hover:text-green-600 ${
-                          isActiveLink(subItem.link) ? "text-green-600" : "text-gray-700"
-                        }`}
-                      >
-                        {subItem.title}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <Link
-                  key={item.title}
-                  href={item.link}
-                  className={`relative py-1 text-md font-medium group transition-colors ${
-                    isActiveLink(item.link) ? "text-green-600" : "text-black hover:text-green-600"
+            {/* Centered Search Bar - Desktop */}
+            <div className="hidden md:flex flex-1 max-w-2xl mx-8">
+              <SearchModal />
+            </div>
+
+            {/* Right Section */}
+            <div className="flex items-center gap-4">
+              {/* Orders Link */}
+              <Link
+                href="/orders"
+                className={`hidden md:inline-block px-4 py-2 rounded-lg font-semibold transition-colors duration-200
+                  ${
+                    isActiveLink("/orders")
+                      ? "bg-green-900 text-white"
+                      : "bg-green-900 text-white hover:bg-green-700"
                   }`}
-                >
-                  <span>{item.title}</span>
-                  <span className={`absolute left-0 bottom-0 h-[2px] bg-green-500 transition-all duration-300 ${
-                    isActiveLink(item.link) ? "w-full" : "w-0 group-hover:w-full"
-                  }`}></span>
-                </Link>
-              )
-            )}
-          </div>
+              >
+                Orders
+              </Link>
 
-          {/* Right side */}
-          <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
-            <AuthButton />
-            <SearchModal />
-            <Link href="/cart" className="group flex-shrink-0">
-              <div className="relative flex items-center md:gap-2.5 bg-black hover:bg-gray-800 rounded-full transition-all duration-200 shadow-sm hover:shadow-md justify-center">
-                {/* Mobile Cart */}
-                <div className="flex md:hidden items-center px-3.5 py-2.5">
-                  <div className="relative">
-                    <Image
-                      src="/Cart_Icon.svg"
-                      alt="Cart"
-                      width={22}
-                      height={22}
-                      className="filter brightness-0 invert"
-                      priority
-                    />
-                    {totalItems > 0 && (
-                      <div className="absolute -top-2 -right-2 min-w-[20px] h-[20px] bg-green-400 text-black text-[11px] font-bold rounded-full flex items-center justify-center px-1.5 border border-black">
-                        {totalItems > 99 ? "99+" : totalItems}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                {/* Desktop Cart */}
-                <div className="hidden md:flex items-center gap-2.5 px-4 py-2.5 min-h-[44px] min-w-[100px]">
-                  <div className="relative">
-                    <Image
-                      src="/Cart_Icon.svg"
-                      alt="Cart"
-                      width={22}
-                      height={22}
-                      className="filter brightness-0 invert"
-                      priority
-                    />
-                    {cartItems.length > 0 && (
-                      <div className="absolute -top-2 -right-2 min-w-[20px] h-5 bg-green-400 text-black text-xs font-bold rounded-full flex items-center justify-center px-1 border border-black">
-                        {cartItems.length > 99 ? "99+" : cartItems.length}
-                      </div>
-                      //  <span className="text-sm">{cartItems.length} items</span>
-                    )}
-                  </div>
-                  <span className="text-white text-sm font-semibold">
-                    ₹{totalPrice.toFixed(0)}
-                  </span>
-                </div>
+              {/* Auth Button */}
+              <AuthButton />
+
+              {/* Mobile Search */}
+              <div className="md:hidden">
+                <SearchModal />
               </div>
-            </Link>
 
-            {/* Hamburger */}
-            <button
-              onClick={toggleMenu}
-              className="p-1 md:p-2 rounded-lg text-green-700 lg:hidden border border-green-500 hover:bg-green-100 transition-colors flex-shrink-0"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+              {/* Hamburger Menu */}
+              <button
+                onClick={toggleMenu}
+                className="p-2 rounded-lg text-gray-700 md:hidden hover:bg-gray-100 transition-colors duration-200"
+              >
+                {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile Navigation */}
-        <div
-          className={`fixed inset-x-0 top-24 bg-white/95 backdrop-blur-sm border-b border-gray-200 lg:hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen
-              ? "opacity-100 visible"
-              : "opacity-0 invisible pointer-events-none"
-          }`}
-          style={{
-            maxHeight: isMenuOpen ? "calc(100vh - 6rem)" : "0",
-            overflowY: "auto",
-          }}
-        >
-          <div className="px-4 py-2 space-y-1 mt-2 mb-4">
-            {items.map((item) =>
-              item.title === "Products" ? (
-                <div key={item.title} className="flex flex-col gap-1">
-                  <button
-                    type="button"
-                    className={`flex justify-between items-center w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm font-medium ${
-                      isProductsActive() ? "text-green-600" : "text-black hover:text-green-600"
-                    }`}
-                    onClick={() => setProductDropdownOpen(!productDropdownOpen)}
-                  >
-                    <span>{item.title}</span>
-                    <ChevronDown
-                      className={`w-5 h-5 transition-transform duration-200 ${
-                        productDropdownOpen ? "rotate-180" : "rotate-0"
-                      }`}
-                    />
-                  </button>
-                  <div
-                    className={`ml-4 overflow-hidden transition-all duration-300 ease-in-out ${
-                      productDropdownOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                    }`}
-                  >
-                    <div className="mt-1 flex flex-col gap-1 border-l-2 border-gray-200 pl-3">
-                      {productDropdownItems.map((subItem) => (
-                        <Link
-                          key={subItem.title}
-                          href={subItem.link}
-                          onClick={handleLinkClick}
-                          className={`block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors ${
-                            isActiveLink(subItem.link) ? "text-green-600" : "text-gray-700 hover:text-green-600"
-                          }`}
-                        >
-                          {subItem.title}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <Link
-                  key={item.title}
-                  href={item.link}
-                  onClick={handleLinkClick}
-                  className={`block px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors ${
-                    isActiveLink(item.link) ? "text-green-600" : "text-black hover:text-green-600"
-                  }`}
-                >
-                  {item.title}
-                </Link>
-              )
-            )}
+      {/* Secondary Navigation Bar - Desktop with Reference-Style Smooth Hover */}
+      <nav
+        className={`bg-green-900/95 backdrop-blur-md fixed top-20 left-0 hidden md:block w-full transition-all duration-300 ease-in-out z-30 ${
+          isVisible
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none delay-200"
+        }`}
+      >
+        <div className="w-full px-4 md:px-6 lg:px-8">
+          <div className="flex h-14 items-center justify-center">
+            {/* Use the NavItems component for smooth hover effects */}
+            <NavItems items={productDropdownItems} />
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Navigation */}
+      <div
+        className={`fixed inset-x-0 top-16 bg-white border-b border-gray-200 md:hidden transition-all duration-300 ease-in-out z-30 ${
+          isMenuOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
+        }`}
+        style={{
+          maxHeight: isMenuOpen ? "calc(100vh - 4rem)" : "0",
+          overflowY: "auto",
+        }}
+      >
+        <div className="px-4 py-4 space-y-2">
+          {/* Main Navigation Items */}
+          {items
+            .filter((item) => item.title !== "Orders")
+            .map((item) => (
+              <Link
+                key={item.title}
+                href={item.link}
+                onClick={handleLinkClick}
+                className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                  isActiveLink(item.link)
+                    ? "text-green-600 bg-green-50"
+                    : "text-gray-700 hover:text-green-600 hover:bg-gray-50"
+                }`}
+              >
+                {item.title}
+              </Link>
+            ))}
+
+          {/* Product Categories */}
+          <div className="pt-4 border-t border-gray-200">
+            <p className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Categories
+            </p>
+            {productDropdownItems.map((item) => (
+              <Link
+                key={item.title}
+                href={item.link}
+                onClick={handleLinkClick}
+                className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                  isActiveLink(item.link)
+                    ? "text-green-600 bg-green-50"
+                    : "text-gray-700 hover:text-green-600 hover:bg-gray-50"
+                }`}
+              >
+                {item.title}
+              </Link>
+            ))}
+          </div>
+
+          {/* Orders Link for Mobile */}
+          <div className="pt-4 border-t border-gray-200">
+            <Link
+              href="/orders"
+              onClick={handleLinkClick}
+              className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                isActiveLink("/orders")
+                  ? "text-green-600 bg-green-50"
+                  : "text-gray-700 hover:text-green-600 hover:bg-gray-50"
+              }`}
+            >
+              Orders
+            </Link>
           </div>
 
           {/* Mobile Auth Section */}
           {session?.user && (
-            <div className="border-t border-gray-200 pt-2 mt-2 px-4 pb-4">
-              <div className="flex items-center gap-3 px-3 py-2">
+            <div className="border-t border-gray-200 pt-4 mt-4">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                 <div className="relative flex-shrink-0">
                   {session.user.image ? (
                     <Image
@@ -397,7 +396,7 @@ const Navbar = () => {
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 flex-shrink-0"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
@@ -406,7 +405,10 @@ const Navbar = () => {
           )}
         </div>
       </div>
-    </nav>
+
+      {/* Spacer to prevent content from hiding behind fixed navbar */}
+      <div className="h-16 md:h-28"></div>
+    </>
   );
 };
 

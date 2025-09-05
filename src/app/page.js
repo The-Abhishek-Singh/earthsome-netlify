@@ -1,4 +1,6 @@
+import FloatingCart from "@/Components/hf.jsx/FloatingCart";
 import Home from "@/Components/Home/Carousel";
+import CleanConsciousCarousel from "@/Components/Home/CleanConsciousCarousel";
 import ProductsShowcase from "@/Components/Home/ProductsShowcase";
 import Second from "@/Components/Home/Second";
 import TestimonialCarousel from "@/Components/Home/Testimonial";
@@ -15,13 +17,16 @@ const page = () => {
 
         <Second />
 
+        <MarqueeSectionTailwind />
+
         <ProductsShowcase />
 
-        <MarqueeSectionTailwind />
+        <CleanConsciousCarousel />
 
         <div className="py-20">
           <TestimonialCarousel />
         </div>
+        <FloatingCart />
       </div>
     </div>
   );

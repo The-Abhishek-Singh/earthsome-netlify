@@ -1,326 +1,121 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React from 'react';
 
 const TestimonialCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(1); // Start at 1 (first real slide)
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStartX, setDragStartX] = useState(0);
-  const [dragCurrentX, setDragCurrentX] = useState(0);
-  const [dragOffset, setDragOffset] = useState(0);
-  const containerRef = useRef(null);
-  const autoSlideRef = useRef(null);
-  const isMouseDown = useRef(false);
-
   const testimonials = [
     {
-      id: 1,
-      name: "Michael Smith",
-      role: "Customer",
-      avatar: "🍔",
-      review: "Great products. Always fresh, eco stuff that i can't find anywhere else in the city. I wouldn't imagine my daily life without them!"
-    },
-    {
       id: 2,
-      name: "Sarah Johnson",
-      role: "Regular Customer",
-      avatar: "🥗",
-      review: "The quality is unmatched! Their organic selection has completely transformed how I shop for groceries. Highly recommended for anyone who cares about sustainability."
+      text: "Outstanding service and fresh products that delivery is always on time and quality exceeds expectations every time.",
+      author: "Michael R. Davis", 
+      rating: "02",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&auto=format"
     },
     {
       id: 3,
-      name: "David Williams",
-      role: "Food Enthusiast",
-      avatar: "🍎",
-      review: "Incredible variety of local and eco-friendly products. The staff is knowledgeable and the freshness is always guaranteed. This place is a game-changer!"
+      text: "A seamless experience from start to finish. Great value and fast delivery with exceptional customer service support always.",
+      author: "Sarah J. Brown",
+      rating: "03", 
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop&auto=format"
     },
     {
       id: 4,
-      name: "Emma Davis",
-      role: "Health Conscious Shopper",
-      avatar: "🥕",
-      review: "I love how they source everything locally and sustainably. The prices are fair and the quality speaks for itself. My go-to place for healthy living!"
+      text: "Amazing selection of organic foods. The website is easy to navigate and checkout process is seamless and very quick.",
+      author: "James L. Garcia",
+      rating: "04",
+      image: "https://i.etsystatic.com/18284891/r/il/9d88d8/6946543661/il_1588xN.6946543661_8sh5.jpg"
+    },
+    {
+      id: 5,
+      text: "Fresh ingredients delivered right to my door. The packaging is eco-friendly and products are consistently top-notch quality always.",
+      author: "Lisa M. Miller",
+      rating: "05",
+      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=500&fit=crop&auto=format"
+    },
+    {
+      id: 6,
+      text: "Incredible value for money and time. The subscription service saves me effort and the quality is always excellent every time.",
+      author: "David A. Johnson", 
+      rating: "06",
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&auto=format"
     }
   ];
 
-  // Create extended slides array: [last, 1, 2, 3, 4, first]
-  const extendedTestimonials = [
-    testimonials[testimonials.length - 1], // Clone of last slide (index 0)
-    ...testimonials,                        // Original slides (index 1-4)
-    testimonials[0]                         // Clone of first slide (index 5)
-  ];
-
-  // Get the actual testimonial index for indicators (0-3)
-  const getActualIndex = () => {
-    if (currentIndex === 0) return testimonials.length - 1; // Clone of last -> show last indicator
-    if (currentIndex === extendedTestimonials.length - 1) return 0; // Clone of first -> show first indicator
-    return currentIndex - 1; // Regular slides (subtract 1 because array starts with clone)
-  };
-
-  // Handle smooth transitions with instant repositioning for infinite effect
-  const changeSlide = (newIndex) => {
-    if (isTransitioning) return;
-
-    setIsTransitioning(true);
-    setCurrentIndex(newIndex);
-
-    // After transition completes, handle infinite loop repositioning
-    setTimeout(() => {
-      setIsTransitioning(false);
-      
-      // Instant repositioning without animation
-      if (newIndex === 0) {
-        // We're at the clone of last slide, jump to real last slide
-        setCurrentIndex(testimonials.length);
-      } else if (newIndex === extendedTestimonials.length - 1) {
-        // We're at the clone of first slide, jump to real first slide
-        setCurrentIndex(1);
-      }
-    }, 300);
-  };
-
-  // Auto-slide functionality
-  const startAutoSlide = () => {
-    if (autoSlideRef.current) clearInterval(autoSlideRef.current);
-    autoSlideRef.current = setInterval(() => {
-      if (!isTransitioning && !isDragging) {
-        nextTestimonial();
-      }
-    }, 4000);
-  };
-
-  const stopAutoSlide = () => {
-    if (autoSlideRef.current) {
-      clearInterval(autoSlideRef.current);
-      autoSlideRef.current = null;
-    }
-  };
-
-  useEffect(() => {
-    startAutoSlide();
-    return () => stopAutoSlide();
-  }, [currentIndex, isTransitioning, isDragging]);
-
-  // Navigation functions
-  const nextTestimonial = () => {
-    const nextIndex = currentIndex + 1;
-    changeSlide(nextIndex);
-  };
-
-  const prevTestimonial = () => {
-    const prevIndex = currentIndex - 1;
-    changeSlide(prevIndex);
-  };
-
-  const goToSlide = (index) => {
-    const targetIndex = index + 1; // Add 1 because we have a clone at index 0
-    if (targetIndex === currentIndex || isTransitioning) return;
-    
-    stopAutoSlide();
-    changeSlide(targetIndex);
-
-    // Restart auto-slide after manual navigation
-    setTimeout(() => {
-      startAutoSlide();
-    }, 1000);
-  };
-
-  // Drag functionality
-  const handleDragStart = (clientX) => {
-    if (isTransitioning) return;
-    setIsDragging(true);
-    setDragStartX(clientX);
-    setDragCurrentX(clientX);
-    setDragOffset(0);
-    isMouseDown.current = true;
-    stopAutoSlide();
-  };
-
-  const handleDragMove = (clientX) => {
-    if (!isDragging || !isMouseDown.current || isTransitioning) return;
-    setDragCurrentX(clientX);
-    const offset = clientX - dragStartX;
-    setDragOffset(offset);
-  };
-
-  const handleDragEnd = () => {
-    if (!isDragging || !isMouseDown.current || isTransitioning) return;
-
-    const totalDrag = dragCurrentX - dragStartX;
-    const threshold = 80;
-
-    // Reset drag state
-    setIsDragging(false);
-    setDragOffset(0);
-    setDragStartX(0);
-    setDragCurrentX(0);
-    isMouseDown.current = false;
-
-    // Handle slide change based on drag direction
-    if (Math.abs(totalDrag) > threshold) {
-      if (totalDrag > 0) {
-        prevTestimonial();
-      } else {
-        nextTestimonial();
-      }
-    }
-
-    // Restart auto-slide
-    setTimeout(() => {
-      startAutoSlide();
-    }, 500);
-  };
-
-  // Mouse events
-  const handleMouseDown = (e) => {
-    e.preventDefault();
-    handleDragStart(e.clientX);
-  };
-
-  const handleMouseMove = (e) => {
-    if (isDragging) {
-      e.preventDefault();
-      handleDragMove(e.clientX);
-    }
-  };
-
-  const handleMouseUp = (e) => {
-    if (isDragging) {
-      e.preventDefault();
-      handleDragEnd();
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (isDragging && isMouseDown.current) {
-      handleDragEnd();
-    }
-  };
-
-  // Touch events
-  const handleTouchStart = (e) => {
-    e.preventDefault();
-    handleDragStart(e.touches[0].clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    if (isDragging) {
-      e.preventDefault();
-      handleDragMove(e.touches[0].clientX);
-    }
-  };
-
-  const handleTouchEnd = (e) => {
-    if (isDragging) {
-      e.preventDefault();
-      handleDragEnd();
-    }
-  };
-
-  const TestimonialCard = ({ testimonial }) => (
-    <div className="w-full flex-shrink-0 text-center px-4">
-      {/* Avatar */}
-      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center text-2xl border-2 border-green-200 transition-all duration-300 ease-in-out transform hover:scale-105">
-        {testimonial.avatar}
-      </div>
-
-      {/* Customer Info */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1 transition-all duration-300 ease-in-out">
-          {testimonial.name}
-        </h3>
-        <p className="text-sm text-green-600 transition-all duration-300 ease-in-out">
-          {testimonial.role}
-        </p>
-      </div>
-
-      {/* Review Text */}
-      <blockquote className="text-lg md:text-2xl text-gray-700 italic leading-relaxed max-w-3xl mx-auto transition-all duration-300 ease-in-out">
-        "{testimonial.review}"
-      </blockquote>
-    </div>
-  );
+  // Duplicate the testimonials for seamless looping
+  const duplicatedTestimonials = [...testimonials, ...testimonials];
 
   return (
-    <div className="w-full max-w-7xl mx-auto bg-white rounded-3xl shadow-lg border border-green-200 p-8 md:p-12">
-      {/* Testimonial Content */}
-      <div
-        ref={containerRef}
-        className="mb-8 relative overflow-hidden cursor-grab active:cursor-grabbing select-none"
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        style={{ touchAction: 'pan-y' }}
-      >
-        <div
-          className="flex transition-transform duration-300 ease-out"
-          style={{
-            transform: isDragging ?
-              `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))` :
-              `translateX(-${currentIndex * 100}%)`,
-            transitionDuration: isTransitioning ? '300ms' : '0ms'
-          }}
-        >
-          {extendedTestimonials.map((testimonial, index) => (
-            <TestimonialCard
-              key={`${testimonial.id}-${index}`}
-              testimonial={testimonial}
-            />
-          ))}
+    <div className="py-16 overflow-hidden relative">
+      <div className="max-w-full ">
+        <div className="relative overflow-hidden ">
+          
+          {/* Gradient overlays for smooth edges */}
+          {/* <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div> */}
+          
+          <div className="flex animate-scroll pause-on-hover ">
+            {duplicatedTestimonials.map((testimonial, index) => (
+              <div
+                key={`${testimonial.id}-${index}`}
+                className="flex-shrink-0 w-72 mx-3 group cursor-pointer"
+              >
+                <div
+                  className="relative rounded-3xl overflow-hidden hover:shadow-lg transition-all duration-500 transform hover:-translate-y-1 h-[350px] bg-gradient-to-t from-white via-white/70 to-transparent backdrop-blur-md pointer-events-none border-1 border-gray-200"
+                  style={{ 
+                    background: `linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0) 60%), url(${testimonial.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                  }}
+                >
+                  <div className='w-full h-[10%] -bottom-1 bg-gradient-to-t from-white via-white to-transparent absolute'></div>
+                  
+                  <div className="absolute bottom-40 right-3 w-12 h-12 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                    <span className="text-gray-800 font-bold text-sm">
+                      {testimonial.rating}
+                    </span>
+                  </div>
+
+                  <div className="absolute bottom-28 left-6 text-black text-3xl font-bold font-serif leading-none drop-shadow-lg rotate-[180deg]">
+                    ,,
+                  </div>
+
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <p className="text-gray-800 text-sm leading-relaxed mb-3 font-medium">
+                      {testimonial.text}
+                    </p>
+                  </div>
+                  <p className="text-gray-800 text-sm leading-relaxed bottom-2 right-4 font-medium absolute">
+                     {testimonial.author}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Navigation Controls */}
-      <div className="flex justify-center items-center space-x-2">
-        <button
-          onClick={prevTestimonial}
-          disabled={isTransitioning}
-          className="p-2 hover:bg-green-50 rounded-full transition-all duration-200 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
-          aria-label="Previous testimonial"
-        >
-          <ChevronLeft className="w-4 h-4 text-green-600" />
-        </button>
+  <style jsx>{`
+ @keyframes scroll {
+   0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
 
-        {/* Dots indicator */}
-        <div className="flex items-center space-x-2 mx-4">
-          {testimonials.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              disabled={isTransitioning}
-              className={`h-2 rounded-full transition-all duration-300 ease-in-out transform hover:scale-125 disabled:cursor-not-allowed ${
-                index === getActualIndex()
-                  ? 'bg-green-600 w-6'
-                  : 'bg-green-300 hover:bg-green-400 w-2'
-              }`}
-              aria-label={`Go to testimonial ${index + 1}`}
-            />
-          ))}
-        </div>
+.animate-scroll {
+  display: flex;
+  width: max-content;
+  animation: scroll 25s linear infinite;
+}
 
-        <button
-          onClick={nextTestimonial}
-          disabled={isTransitioning}
-          className="p-2 hover:bg-green-50 rounded-full transition-all duration-200 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
-          aria-label="Next testimonial"
-        >
-          <ChevronRight className="w-4 h-4 text-green-600" />
-        </button>
-      </div>
+  /* This makes the animation stop on hover */
+  .pause-on-hover:hover {
+    animation-play-state: paused;
+  }
+`}</style>
 
-      {/* Progress indicator */}
-      <div className="mt-6 text-center">
-        <div className="inline-flex items-center text-xs text-green-500">
-          <div className="w-1 h-1 bg-green-300 rounded-full mr-2"></div>
-          <span>{getActualIndex() + 1} of {testimonials.length}</span>
-          <div className="w-1 h-1 bg-green-300 rounded-full ml-2"></div>
-        </div>
-      </div>
     </div>
   );
 };
