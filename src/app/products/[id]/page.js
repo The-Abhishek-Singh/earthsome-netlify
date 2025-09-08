@@ -17,6 +17,7 @@ import {
   Package,
   Award
 } from 'lucide-react';
+import FloatingCart from '@/Components/hf.jsx/FloatingCart';
 
 // Toast Component
 const Toast = ({ message, type, onClose }) => {
@@ -197,6 +198,7 @@ export default function ProductDetailPage() {
 
   return (
     <div  id="product-page-top" className="min-h-screen bg-white  mb-[900px] sm:mb-[700px] md:mb-[600px] lg:mb-[485px] ">
+      <FloatingCart />
       {/* Toast Notification */}
       {toast && (
         <Toast

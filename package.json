@@ -18,7 +18,7 @@
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.518.0",
     "mongodb": "^5.9.2",
-    "next": "15.3.4",
+    "next": "^15.5.2",
     "next-auth": "^4.24.11",
     "punycode": "^2.3.1",
     "react": "^19.0.0",

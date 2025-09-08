@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Heart, Check, X, Search } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import FloatingCart from "@/Components/hf.jsx/FloatingCart";
 
 // You can create these components in separate files for better code organization.
 // Toast Component
@@ -338,6 +339,7 @@ const AllProductsPage = () => {
           </>
         )}
       </div>
+      <FloatingCart />
     </div>
   );
 };

@@ -18,6 +18,7 @@ import {
   Award,
   Tag
 } from 'lucide-react';
+import FloatingCart from '@/Components/hf.jsx/FloatingCart';
 
 // Toast Component
 const Toast = ({ message, type, onClose }) => {
@@ -86,6 +87,7 @@ const ComboProductCard = ({ product }) => {
 
   return (
     <div className="border rounded-lg p-4 bg-white">
+      
       <div className="flex gap-4">
         <div className="flex-shrink-0 w-20 h-20">
           <img
@@ -284,6 +286,9 @@ export default function ComboProductDetailPage() {
 
   return (
     <div id="combo-page-top" className="min-h-screen bg-white mb-[900px] sm:mb-[700px] md:mb-[600px] lg:mb-[485px]">
+
+      <FloatingCart />
+
       {/* Toast Notification */}
       {toast && (
         <Toast

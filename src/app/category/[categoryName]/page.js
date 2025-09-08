@@ -802,6 +802,8 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { ShoppingCart, Heart, Star, Check, X, Search } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import FloatingCart from "@/Components/hf.jsx/FloatingCart";
+
 
 // Toast Component
 const Toast = ({ message, type, onClose }) => {
@@ -965,7 +967,9 @@ const CategoryPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white bg-white mb-[481px]">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white bg-white mb-[481px]">\
+
+      <FloatingCart />
       {/* Toast Notification */}
       {toast && (
         <Toast
@@ -1025,6 +1029,7 @@ const CategoryPage = () => {
 
         {currentProducts.length ? (
           <>
+           <FloatingCart/>
             {/* Products Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {currentProducts.map((product) => (

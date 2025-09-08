@@ -303,6 +303,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Heart, Check, X, Search } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import FloatingCart from "@/Components/hf.jsx/FloatingCart";
 
 // It is highly recommended to create these components in separate files
 // for better code organization.
@@ -622,6 +623,8 @@ const BestsellersPage = () => {
               ))}
             </div>
 
+
+
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex justify-center items-center mt-12 gap-4">
@@ -642,11 +645,13 @@ const BestsellersPage = () => {
                 >
                   Next
                 </button>
+                
               </div>
             )}
           </>
         )}
       </div>
+      <FloatingCart />
     </div>
   );
 };

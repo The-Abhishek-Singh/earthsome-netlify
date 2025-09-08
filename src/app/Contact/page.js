@@ -1,4 +1,5 @@
 import ContactPage from '@/Components/Contact/ContactPage'
+import FloatingCart from '@/Components/hf.jsx/FloatingCart'
 import React from 'react'
 
 const page = () => {
@@ -9,6 +10,7 @@ const page = () => {
     
     <ContactPage />
 
+   <FloatingCart />
 
 
     </div>

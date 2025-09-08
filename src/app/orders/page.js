@@ -1,3 +1,4 @@
+import FloatingCart from "@/Components/hf.jsx/FloatingCart";
 import MyOrdersPage from "@/Components/Orders/Myorderpage";
 import React from "react";
 
@@ -7,6 +8,7 @@ const page = () => {
       {/* <AboutUsPage /> */}
       <div className="md:mb-[600px] sm:mt-24 bg-white">
         <MyOrdersPage />
+        <FloatingCart />
       </div>
     </div>
   );

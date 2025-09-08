@@ -20,6 +20,7 @@ import ShippingForm from "@/Components/Checkout/ShippingForm";
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
+import FloatingCart from "@/Components/hf.jsx/FloatingCart";
 
 const CartPage = () => {
   const router = useRouter();
@@ -887,6 +888,7 @@ const CartPage = () => {
           </div>
         </div>
       </div>
+      <FloatingCart />
     </div>
   );
 };
