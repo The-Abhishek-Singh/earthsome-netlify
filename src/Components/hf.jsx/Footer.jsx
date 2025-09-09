@@ -60,7 +60,7 @@ const Footer = () => {
             </div>
 
             {/* Company Links */}
-            <div className="space-y-3">
+            <div className="space-y-3 ml-10">
               <h3 className="font-semibold text-base text-black border-b border-green-700 pb-1 mb-3 inline-block">
                 Company
               </h3>
@@ -87,7 +87,7 @@ const Footer = () => {
             </div>
 
             {/* Social Media & Newsletter */}
-            <div className="space-y-4">
+            <div className="space-y-4 mr-5">
               {/* Social Media */}
               <div>
                 <h3 className="font-semibold text-base text-black border-b border-green-700 pb-1 mb-3 inline-block">
