@@ -626,7 +626,7 @@ export default function Home() {
                   }
                 }}
                 disabled={isTransitioning}
-                className="nav-button absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/90 hover:bg-white text-gray-600 p-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md opacity-80 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                className="nav-button absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-gray-600 p-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md opacity-80 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                 aria-label="Previous slide"
                 style={{ touchAction: "manipulation" }}
               >
@@ -656,7 +656,7 @@ export default function Home() {
                   }
                 }}
                 disabled={isTransitioning}
-                className="nav-button absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/90 hover:bg-white text-gray-600 p-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md opacity-80 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                className="nav-button absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-gray-600 p-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md opacity-80 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
                 aria-label="Next slide"
                 style={{ touchAction: "manipulation" }}
               >
