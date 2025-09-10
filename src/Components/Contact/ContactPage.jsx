@@ -13,7 +13,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-export default function ContactPage() { 
+export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -45,15 +45,15 @@ export default function ContactPage() {
   };
 
   const validateContact = (contact) => {
-    const cleanContact = contact.replace(/\D/g, '');
+    const cleanContact = contact.replace(/\D/g, "");
     return cleanContact.length === 10;
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     if (name === "contact") {
-      const cleanValue = value.replace(/\D/g, '').slice(0, 10);
+      const cleanValue = value.replace(/\D/g, "").slice(0, 10);
       setFormData({
         ...formData,
         [name]: cleanValue,
@@ -83,7 +83,8 @@ export default function ContactPage() {
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = "Please enter a valid email address (e.g., user@example.com)";
+      newErrors.email =
+        "Please enter a valid email address (e.g., user@example.com)";
     }
 
     if (!formData.contact.trim()) {
@@ -121,7 +122,9 @@ export default function ContactPage() {
           name: formData.name,
           email: formData.email,
           contact: formData.contact,
-          purpose: purposeOptions.find(opt => opt.value === formData.purpose)?.label || formData.purpose,
+          purpose:
+            purposeOptions.find((opt) => opt.value === formData.purpose)
+              ?.label || formData.purpose,
           message: formData.message || "No additional message provided",
         }),
       });
@@ -131,7 +134,13 @@ export default function ContactPage() {
 
       if (result.success) {
         setIsSubmitted(true);
-        setFormData({ name: "", email: "", contact: "", purpose: "", message: "" });
+        setFormData({
+          name: "",
+          email: "",
+          contact: "",
+          purpose: "",
+          message: "",
+        });
         setTimeout(() => setIsSubmitted(false), 4000);
       } else {
         alert("❌ Something went wrong. Please try again later.");
@@ -143,7 +152,7 @@ export default function ContactPage() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+    if (e.key === "Enter" && e.target.tagName !== "TEXTAREA") {
       e.preventDefault();
       handleSubmit();
     }
@@ -152,15 +161,13 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-green-50 to-white py-20">
+      <div className="relative bg-gradient-to-br from-green-50 to-white py-20">
         <div className="absolute inset-0 bg-white/80"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative max-w mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-fade-in-up">
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
               YOUR PATH TO
-              <span className="block text-green-600">
-                HEALTH & WELLNESS
-              </span>
+              <span className="block text-green-600">HEALTH & WELLNESS</span>
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Get in Touch – Your Wellness Matters to Us!
@@ -169,16 +176,16 @@ export default function ContactPage() {
         </div>
 
         {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-green-100 rounded-full opacity-60 animate-bounce"></div>
-        <div className="absolute bottom-20 right-10 w-16 h-16 bg-green-200 rounded-full opacity-40 animate-bounce delay-75"></div>
-        <div className="absolute top-40 right-20 w-12 h-12 bg-green-300 rounded-full opacity-30 animate-bounce delay-150"></div>
+        <div className="absolute top-20 left-10 w-20 h-20 bg-green-100 rounded-full opacity-60 animate-bounce hidden sm:block"></div>
+        <div className="absolute bottom-20 right-10 w-16 h-16 bg-green-200 rounded-full opacity-40 animate-bounce delay-75 hidden sm:block"></div>
+        <div className="absolute top-40 right-20 w-12 h-12 bg-green-300 rounded-full opacity-30 animate-bounce delay-150 hidden sm:block"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           {/* Contact Form */}
           <div className="relative">
-            <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 lg:p-12 transform hover:scale-105 transition-all duration-500">
+            <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-5 lg:p-12 transform hover:scale-105 transition-all duration-500">
               <div className="absolute inset-0 bg-gradient-to-r from-green-50 to-transparent rounded-3xl opacity-50"></div>
               <div className="relative">
                 <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
@@ -196,7 +203,7 @@ export default function ContactPage() {
                         className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-300 ${
                           focusedField === "name"
                             ? "text-green-600"
-                            : errors.name 
+                            : errors.name
                             ? "text-red-500"
                             : "text-gray-400"
                         }`}
@@ -234,7 +241,7 @@ export default function ContactPage() {
                         className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-300 ${
                           focusedField === "email"
                             ? "text-green-600"
-                            : errors.email 
+                            : errors.email
                             ? "text-red-500"
                             : "text-gray-400"
                         }`}
@@ -272,7 +279,7 @@ export default function ContactPage() {
                         className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-300 ${
                           focusedField === "contact"
                             ? "text-green-600"
-                            : errors.contact 
+                            : errors.contact
                             ? "text-red-500"
                             : "text-gray-400"
                         }`}
@@ -311,7 +318,7 @@ export default function ContactPage() {
                         className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors duration-300 ${
                           focusedField === "purpose"
                             ? "text-green-600"
-                            : errors.purpose 
+                            : errors.purpose
                             ? "text-red-500"
                             : "text-gray-400"
                         }`}
@@ -346,7 +353,8 @@ export default function ContactPage() {
                   {/* Message Field - Now Optional */}
                   <div className="group">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Additional Message <span className="text-gray-400 text-xs">(Optional)</span>
+                      Additional Message{" "}
+                      <span className="text-gray-400 text-xs">(Optional)</span>
                     </label>
                     <div className="relative">
                       <MessageCircle
@@ -453,7 +461,8 @@ export default function ContactPage() {
                     <h3 className="font-bold text-gray-900 mb-2">Visit Us</h3>
                     <p className="text-gray-600 mb-3">Come see us in person</p>
                     <address className="text-green-600 hover:text-green-700 font-semibold not-italic">
-                     610-613, 6<sup>th</sup> Floor, Anam 2. S P Ring Road. Ambli. Ahmedabad - 380058
+                      610-613, 6<sup>th</sup> Floor, Anam 2. S P Ring Road.
+                      Ambli. Ahmedabad - 380058
                     </address>
                   </div>
                 </div>
@@ -468,7 +477,7 @@ export default function ContactPage() {
               <p className="text-gray-700 text-center leading-relaxed">
                 Our team looks forward to helping you on your journey to health
                 and wellness. Follow us for wellness tips & updates!
-              </p>  
+              </p>
 
               {/* Social Media Buttons */}
               <div className="flex justify-center gap-4 mt-6">
@@ -481,6 +490,17 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
+        </div>
+        <div className="rounded-2xl overflow-hidden mt-10 border border-green-300">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d3671.9286368760563!2d72.47441827603646!3d23.026392316184232!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1s610-613%2C%206th%20Floor%2C%20Anam%202.%20S%20P%20Ring%20Road.%20Ambli.%20Ahmedabad%20-%20380058!5e0!3m2!1sen!2sin!4v1757489918987!5m2!1sen!2sin"
+            width="100%"
+            height="400"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </div>
     </div>

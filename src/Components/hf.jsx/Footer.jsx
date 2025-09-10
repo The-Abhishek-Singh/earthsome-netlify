@@ -6,6 +6,8 @@ import {
   FaLinkedinIn,
   FaYoutube,
 } from "react-icons/fa";
+import { FaPhoneAlt } from "react-icons/fa";
+import { FiMail, FiMapPin } from "react-icons/fi";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -25,35 +27,54 @@ const Footer = () => {
               className="w-24 h-auto sm:w-28 md:w-32 mb-3"
             />
             <p className="text-sm text-gray-700 leading-relaxed">
-              Your trusted partner for sustainable wellness and eco-friendly products.
+              Your trusted partner for sustainable wellness and eco-friendly
+              products.
             </p>
           </div>
 
           {/* Footer Links Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 flex-1">
-            
             {/* Contact Info */}
             <div className="space-y-3">
               <h3 className="font-semibold text-base text-black border-b border-green-700 pb-1 mb-3 inline-block">
                 Reach Us
               </h3>
+
               <div className="space-y-2.5">
+                {/* Phone */}
                 <div className="flex items-center space-x-2 group">
-                  <span className="text-green-700 group-hover:scale-110 transition-transform duration-200 flex-shrink-0">📞</span>
-                  <a href="tel:+919876543210" className="text-black hover:text-green-700 transition-colors duration-200 text-sm">
+                  {/* <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-black hover:text-green-800 group-hover:scale-110 transition-transform duration-200 flex-shrink-0"> */}
+                    <FaPhoneAlt size={12} />
+                  {/* </span> */}
+                  <a
+                    href="tel:+919876543210"
+                    className="text-black hover:text-green-700 transition-colors duration-200 text-sm"
+                  >
                     +91 9876543210
                   </a>
                 </div>
+
+                {/* Email */}
                 <div className="flex items-center space-x-2 group">
-                  <span className="text-green-700 group-hover:scale-110 transition-transform duration-200 flex-shrink-0">📧</span>
-                  <a href="mailto:earthsomemarketing@gmail.com" className="text-black hover:text-green-700 transition-colors duration-200 text-sm break-all">
+                  {/* <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white   text-black hover:text-green-800 group-hover:scale-110 transition-transform duration-200 flex-shrink-0"> */}
+                    <FiMail size={12} />
+                  {/* </span> */}
+                  <a
+                    href="mailto:earthsomemarketing@gmail.com"
+                    className="text-black hover:text-green-700 transition-colors duration-200 text-sm break-all"
+                  >
                     earthsomemarketing@gmail.com
                   </a>
                 </div>
+
+                {/* Address */}
                 <div className="flex items-start space-x-2 group">
-                  <span className="text-green-700 mt-0.5 group-hover:scale-110 transition-transform duration-200 flex-shrink-0">📍</span>
+                  {/* <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white   text-black hover:text-green-800 mt-0.5 group-hover:scale-110 transition-transform duration-200 flex-shrink-0"> */}
+                    <FiMapPin size={25} />
+                  {/* </span> */}
                   <p className="text-black hover:text-green-700 transition-colors duration-200 text-sm leading-relaxed">
-                    610-613, 6<sup>th</sup> Floor, Anam 2. S P Ring Road. Ambli. Ahmedabad - 380058
+                    610-613, 6<sup>th</sup> Floor, Anam 2. S P Ring Road. Ambli.
+                    Ahmedabad - 380058
                   </p>
                 </div>
               </div>
@@ -66,20 +87,35 @@ const Footer = () => {
               </h3>
               <ul className="text-black space-y-2.5">
                 <li>
-                  <Link href="/About" className="hover:text-green-700 transition-all duration-200 text-sm relative group">
-                    <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">About Us</span>
+                  <Link
+                    href="/About"
+                    className="hover:text-green-700 transition-all duration-200 text-sm relative group"
+                  >
+                    <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">
+                      About Us
+                    </span>
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-700 group-hover:w-full transition-all duration-200"></span>
                   </Link>
                 </li>
                 <li>
-                  <Link href="/Contact" className="hover:text-green-700 transition-all duration-200 text-sm relative group">
-                    <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">Contact Us</span>
+                  <Link
+                    href="/Contact"
+                    className="hover:text-green-700 transition-all duration-200 text-sm relative group"
+                  >
+                    <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">
+                      Contact Us
+                    </span>
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-700 group-hover:w-full transition-all duration-200"></span>
                   </Link>
                 </li>
                 <li>
-                  <Link href="/AllProducts" className="hover:text-green-700 transition-all duration-200 text-sm relative group">
-                    <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">All Products</span>
+                  <Link
+                    href="/AllProducts"
+                    className="hover:text-green-700 transition-all duration-200 text-sm relative group"
+                  >
+                    <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">
+                      All Products
+                    </span>
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-700 group-hover:w-full transition-all duration-200"></span>
                   </Link>
                 </li>
@@ -93,7 +129,7 @@ const Footer = () => {
                 <h3 className="font-semibold text-base text-black border-b border-green-700 pb-1 mb-3 inline-block">
                   Follow Us
                 </h3>
-                
+
                 <div className="flex gap-3 mb-4">
                   {/* Facebook */}
                   <div className="relative group">
@@ -103,12 +139,16 @@ const Footer = () => {
                     <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 absolute bottom-full left-1/2 -translate-x-1/2 bg-white shadow-lg rounded-md py-2 px-3 mb-2 z-10 min-w-[140px]">
                       <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-white"></div>
                       <div className="flex flex-col gap-2">
-                        <a href="https://www.facebook.com/earthsome.wellness" 
-                           className="text-sm hover:text-green-700 whitespace-nowrap transition-colors duration-200">
-                         earthsome Wellness
+                        <a
+                          href="https://www.facebook.com/earthsome.wellness"
+                          className="text-sm hover:text-green-700 whitespace-nowrap transition-colors duration-200"
+                        >
+                          earthsome Wellness
                         </a>
-                        <a href="https://www.facebook.com/profile.php?id=61575255760417" 
-                           className="text-sm hover:text-green-700 whitespace-nowrap transition-colors duration-200">
+                        <a
+                          href="https://www.facebook.com/profile.php?id=61575255760417"
+                          className="text-sm hover:text-green-700 whitespace-nowrap transition-colors duration-200"
+                        >
                           earthsome.care
                         </a>
                       </div>
@@ -123,21 +163,26 @@ const Footer = () => {
                     <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 absolute bottom-full left-1/2 -translate-x-1/2 bg-white shadow-lg rounded-md py-2 px-3 mb-2 z-10 min-w-[140px]">
                       <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-white"></div>
                       <div className="flex flex-col gap-2">
-                        <a href="https://www.instagram.com/earthsome.wellness/" 
-                           className="text-sm hover:text-green-700 whitespace-nowrap transition-colors duration-200">
-                              earthsome Wellness
+                        <a
+                          href="https://www.instagram.com/earthsome.wellness/"
+                          className="text-sm hover:text-green-700 whitespace-nowrap transition-colors duration-200"
+                        >
+                          earthsome Wellness
                         </a>
-                        <a href="https://www.instagram.com/earthsome.care/" 
-                           className="text-sm hover:text-green-700 whitespace-nowrap transition-colors duration-200">
-                               earthsome.care
+                        <a
+                          href="https://www.instagram.com/earthsome.care/"
+                          className="text-sm hover:text-green-700 whitespace-nowrap transition-colors duration-200"
+                        >
+                          earthsome.care
                         </a>
                       </div>
                     </div>
                   </div>
 
                   {/* YouTube */}
-                  <a href="https://www.youtube.com/@EarthsomeWellness" 
-                     className="flex items-center justify-center w-9 h-9 bg-white rounded-full shadow-md text-black hover:text-white hover:bg-green-700 transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
+                  <a
+                    href="https://www.youtube.com/@EarthsomeWellness"
+                    className="flex items-center justify-center w-9 h-9 bg-white rounded-full shadow-md text-black hover:text-white hover:bg-green-700 transition-all duration-300 transform hover:scale-110 hover:shadow-lg"
                   >
                     <FaYoutube size={14} />
                   </a>
@@ -170,13 +215,16 @@ const Footer = () => {
           <p>
             © 2025{" "}
             <span className="text-green-700 font-medium hover:text-green-800 transition-colors duration-200">
-              Eartsome  <Link href="/Privacy-Policies" className="text-green-700 font-medium hover:text-green-800 transition-colors duration-200">
-            Privacy Policy
-          </Link>
-            </span>{" "}  
+              Eartsome{" "}
+              <Link
+                href="/Privacy-Policies"
+                className="text-green-700 font-medium hover:text-green-800 transition-colors duration-200"
+              >
+                Privacy Policy
+              </Link>
+            </span>{" "}
             . All rights reserved
           </p>
-         
         </div>
       </div>
     </footer>

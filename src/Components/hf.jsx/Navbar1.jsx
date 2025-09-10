@@ -29,32 +29,22 @@ const NavItems = ({ items }) => {
             className={`
               relative px-4 py-2 text-sm font-medium transition-all duration-200 ease-out rounded-lg
               group hover:text-white
-              ${isActiveLink(item.link) 
-                ? "text-white" 
-                : "text-white/80"
-              }
+              ${isActiveLink(item.link) ? "text-white" : "text-white/80"}
             `}
           >
-            <span className="relative z-10">
-              {item.title}
-            </span>
-            
+            <span className="relative z-10">{item.title}</span>
+
             {/* Hover underline effect - exactly like reference */}
-            <span 
+            <span
               className={`
                 absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-white 
                 transition-all duration-300 ease-out
-                ${isActiveLink(item.link) 
-                  ? "w-6" 
-                  : "w-0 group-hover:w-6"
-                }
-              `} 
+                ${isActiveLink(item.link) ? "w-6" : "w-0 group-hover:w-6"}
+              `}
             />
-            
+
             {/* Subtle hover background */}
-            <span 
-              className="absolute inset-0 bg-white/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" 
-            />
+            <span className="absolute inset-0 bg-white/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
           </Link>
         ))}
       </div>
@@ -221,7 +211,7 @@ const Navbar = () => {
     <>
       {/* Main Navbar */}
       <nav
-        className={`w-full bg-white/60 backdrop-blur-md h-20 fixed top-0 left-0 transition-all duration-300 ease-in-out z-40 border-b-1 border-green-500 ${
+        className={`w-full  bg-white/60 backdrop-blur-md h-20 fixed top-0 left-0 transition-all duration-300 ease-in-out z-40 border-b-1 border-green-500 ${
           isVisible
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none delay-200"
@@ -313,7 +303,7 @@ const Navbar = () => {
       >
         <div className="px-4 py-4 space-y-2">
           {/* Main Navigation Items */}
-          {items
+          {/* {items
             .filter((item) => item.title !== "Orders")
             .map((item) => (
               <Link
@@ -328,7 +318,7 @@ const Navbar = () => {
               >
                 {item.title}
               </Link>
-            ))}
+            ))} */}
 
           {/* Product Categories */}
           <div className="pt-4 border-t border-gray-200">

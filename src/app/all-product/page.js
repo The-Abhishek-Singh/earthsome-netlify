@@ -3,7 +3,7 @@ import ProductListingPage from "../../Components/Product/Product";
 import FloatingCart from "@/Components/hf.jsx/FloatingCart";
 function page() {
   return (
-    <div className= ' mt-20 mb-[1000px] sm:mb-[700px] md:mb-[600px] lg:mb-[485px] '>
+    <div className=" mb-[690px] sm:mb-[500px] md:mb-[490px] lg:mb-[400px] xl:mb-[271px]">
       <ProductListingPage />
       <FloatingCart />
     </div>

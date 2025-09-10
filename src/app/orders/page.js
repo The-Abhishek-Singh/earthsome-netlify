@@ -4,9 +4,9 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="mt-20 mb-[1000px] sm:mb-[700px]  lg:mb-[485px] sm:mt-28 bg-white ">
+    <div className="mt-20 mb-[660px] sm:mb-[465px] md:mb-[470px] lg:mb-[350px] xl:mb-[290px] bg-white ">
       {/* <AboutUsPage /> */}
-      <div className="md:mb-[600px] sm:mt-24 bg-white">
+      <div className="bg-white">
         <MyOrdersPage />
         <FloatingCart />
       </div>

@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useParams, notFound, useRouter } from 'next/navigation';
-import ImageGallery from '@/Components/ImageGallery';
-import { useCart } from '@/context/CartContext';
-import { 
-  ShoppingCart, 
-  Heart, 
-  Star, 
-  Check, 
-  X, 
-  ArrowLeft, 
-  Shield, 
-  Truck, 
+import React, { useEffect, useState } from "react";
+import { useParams, notFound, useRouter } from "next/navigation";
+import ImageGallery from "@/Components/ImageGallery";
+import { useCart } from "@/context/CartContext";
+import {
+  ShoppingCart,
+  Heart,
+  Star,
+  Check,
+  X,
+  ArrowLeft,
+  Shield,
+  Truck,
   RotateCcw,
   Package,
-  Award
-} from 'lucide-react';
-import FloatingCart from '@/Components/hf.jsx/FloatingCart';
+  Award,
+} from "lucide-react";
+import FloatingCart from "@/Components/hf.jsx/FloatingCart";
 
 // Toast Component
 const Toast = ({ message, type, onClose }) => {
@@ -29,15 +29,23 @@ const Toast = ({ message, type, onClose }) => {
   }, [onClose]);
 
   return (
-    <div className={`fixed top-20 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 ease-out ${
-      type === 'success' 
-        ? 'bg-green-50 border border-green-200 text-green-800' 
-        : 'bg-red-50 border border-red-200 text-red-800'
-    }`}>
-      <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
-        type === 'success' ? 'bg-green-500' : 'bg-red-500'
-      }`}>
-        {type === 'success' ? <Check size={14} className="text-white" /> : <X size={14} className="text-white" />}
+    <div
+      className={`fixed top-20 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 ease-out ${
+        type === "success"
+          ? "bg-green-50 border border-green-200 text-green-800"
+          : "bg-red-50 border border-red-200 text-red-800"
+      }`}
+    >
+      <div
+        className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
+          type === "success" ? "bg-green-500" : "bg-red-500"
+        }`}
+      >
+        {type === "success" ? (
+          <Check size={14} className="text-white" />
+        ) : (
+          <X size={14} className="text-white" />
+        )}
       </div>
       <span className="font-medium">{message}</span>
       <button
@@ -99,23 +107,28 @@ export default function ProductDetailPage() {
 
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`, {
-          cache: 'no-store',
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`,
+          {
+            cache: "no-store",
+          }
+        );
 
         if (!res.ok) {
           if (res.status === 404) {
             notFound();
             return;
           }
-          throw new Error(`Failed to fetch product: ${res.status} ${res.statusText}`);
+          throw new Error(
+            `Failed to fetch product: ${res.status} ${res.statusText}`
+          );
         }
 
         const productData = await res.json();
         setProduct(productData);
       } catch (err) {
         setError(err.message);
-        console.error('Error fetching product:', err);
+        console.error("Error fetching product:", err);
       } finally {
         setLoading(false);
       }
@@ -126,21 +139,21 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = async () => {
     if (!product) return;
-    
+
     setAddingToCart(true);
     try {
-      await addToCart({ 
-        ...product, 
-        quantity: 1
+      await addToCart({
+        ...product,
+        quantity: 1,
       });
       setToast({
         message: `${product.productName} added to cart!`,
-        type: 'success'
+        type: "success",
       });
     } catch (error) {
       setToast({
-        message: 'Failed to add product to cart',
-        type: 'error'
+        message: "Failed to add product to cart",
+        type: "error",
       });
     } finally {
       setAddingToCart(false);
@@ -149,18 +162,18 @@ export default function ProductDetailPage() {
 
   const handleBuyNow = async () => {
     if (!product) return;
-    
+
     setBuyingNow(true);
     try {
-      await addToCart({ 
-        ...product, 
-        quantity: 1
+      await addToCart({
+        ...product,
+        quantity: 1,
       });
-      router.push('/cart');
+      router.push("/cart");
     } catch (error) {
       setToast({
-        message: 'Failed to proceed to checkout',
-        type: 'error'
+        message: "Failed to proceed to checkout",
+        type: "error",
       });
     } finally {
       setBuyingNow(false);
@@ -170,18 +183,23 @@ export default function ProductDetailPage() {
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
     setToast({
-      message: isFavorite ? 'Removed from favorites' : 'Added to favorites',
-      type: 'success'
+      message: isFavorite ? "Removed from favorites" : "Added to favorites",
+      type: "success",
     });
   };
 
   const getBadgeColor = (badge) => {
     switch (badge) {
-      case 'Best Seller': return 'bg-green-500';
-      case 'New': return 'bg-green-600';
-      case 'Premium': return 'bg-green-700';
-      case 'Limited': return 'bg-green-800';
-      default: return 'bg-gray-500';
+      case "Best Seller":
+        return "bg-green-500";
+      case "New":
+        return "bg-green-600";
+      case "Premium":
+        return "bg-green-700";
+      case "Limited":
+        return "bg-green-800";
+      default:
+        return "bg-gray-500";
     }
   };
 
@@ -189,7 +207,9 @@ export default function ProductDetailPage() {
   if (error) throw new Error(error);
   if (!product) return notFound();
 
-  const saveAmount = product.originalPrice ? product.originalPrice - product.price : 0;
+  const saveAmount = product.originalPrice
+    ? product.originalPrice - product.price
+    : 0;
   const savePercentage = product.originalPrice
     ? Math.round((saveAmount / product.originalPrice) * 100)
     : 0;
@@ -197,7 +217,10 @@ export default function ProductDetailPage() {
   const allImages = [product.productImageURL, ...(product.images || [])];
 
   return (
-    <div  id="product-page-top" className="min-h-screen bg-white  mb-[900px] sm:mb-[700px] md:mb-[600px] lg:mb-[485px] ">
+    <div
+      id="product-page-top"
+      className="min-h-screen bg-white  mb-[660px] sm:mb-[465px] md:mb-[470px] lg:mb-[350px] xl:mb-[300px]"
+    >
       <FloatingCart />
       {/* Toast Notification */}
       {toast && (
@@ -225,7 +248,10 @@ export default function ProductDetailPage() {
           {/* Image Gallery */}
           <div className="order-1">
             <div className="sticky top-8">
-              <ImageGallery images={allImages} productName={product.productName} />
+              <ImageGallery
+                images={allImages}
+                productName={product.productName}
+              />
             </div>
           </div>
 
@@ -236,14 +262,18 @@ export default function ProductDetailPage() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   {product.badge && (
-                    <span className={`px-3 py-1 rounded-full text-white text-sm font-medium ${getBadgeColor(product.badge)}`}>
+                    <span
+                      className={`px-3 py-1 rounded-full text-white text-sm font-medium ${getBadgeColor(
+                        product.badge
+                      )}`}
+                    >
                       {product.badge}
                     </span>
                   )}
                   {product.category && (
                     <span className="text-sm text-green-600 font-medium uppercase tracking-wider">
                       {product.category}
-                    </span> 
+                    </span>
                   )}
                 </div>
                 <button
@@ -254,8 +284,8 @@ export default function ProductDetailPage() {
                     size={20}
                     className={`${
                       isFavorite
-                        ? 'fill-red-500 text-red-500'
-                        : 'text-gray-400 hover:text-red-500'
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-400 hover:text-red-500"
                     } transition-colors duration-200`}
                   />
                 </button>
@@ -270,10 +300,14 @@ export default function ProductDetailPage() {
                 <div className="flex items-center gap-3 mb-6">
                   <div className="flex items-center gap-1">
                     <Star size={16} className="text-yellow-400 fill-current" />
-                    <span className="text-sm font-medium text-gray-700">{product.rating}</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      {product.rating}
+                    </span>
                   </div>
                   {product.reviewsCount !== undefined && (
-                    <span className="text-sm text-gray-500">({product.reviewsCount} reviews)</span>
+                    <span className="text-sm text-gray-500">
+                      ({product.reviewsCount} reviews)
+                    </span>
                   )}
                 </div>
               )}
@@ -281,10 +315,14 @@ export default function ProductDetailPage() {
               {/* Price Section */}
               <div className="mb-8">
                 <div className="flex items-baseline gap-4 mb-2">
-                  <span className="text-3xl font-bold text-gray-900">₹{product.price}</span>
+                  <span className="text-3xl font-bold text-gray-900">
+                    ₹{product.price}
+                  </span>
                   {product.originalPrice && (
                     <>
-                      <span className="text-lg text-gray-500 line-through">₹{product.originalPrice}</span>
+                      <span className="text-lg text-gray-500 line-through">
+                        ₹{product.originalPrice}
+                      </span>
                       <span className="bg-red-100 text-red-600 text-sm font-medium px-2 py-1 rounded">
                         {savePercentage}% OFF
                       </span>
@@ -306,7 +344,9 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Award size={14} className="text-gray-500" />
-                  <span className="text-gray-600">Category: {product.category}</span>
+                  <span className="text-gray-600">
+                    Category: {product.category}
+                  </span>
                 </div>
               </div>
 
@@ -316,7 +356,7 @@ export default function ProductDetailPage() {
                   onClick={handleAddToCart}
                   disabled={addingToCart}
                   className={`flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors ${
-                    addingToCart ? 'opacity-75' : ''
+                    addingToCart ? "opacity-75" : ""
                   }`}
                 >
                   {addingToCart ? (
@@ -335,7 +375,7 @@ export default function ProductDetailPage() {
                   onClick={handleBuyNow}
                   disabled={buyingNow}
                   className={`flex-1 bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-medium transition-colors ${
-                    buyingNow ? 'opacity-75' : ''
+                    buyingNow ? "opacity-75" : ""
                   }`}
                 >
                   {buyingNow ? (
@@ -344,7 +384,7 @@ export default function ProductDetailPage() {
                       Processing...
                     </>
                   ) : (
-                    'Buy Now'
+                    "Buy Now"
                   )}
                 </button>
               </div>
@@ -360,7 +400,10 @@ export default function ProductDetailPage() {
                   <span className="text-xs text-gray-600">Free Shipping</span>
                 </div>
                 <div className="text-center py-3 bg-green-50 rounded-lg">
-                  <RotateCcw size={20} className="text-green-600 mx-auto mb-1" />
+                  <RotateCcw
+                    size={20}
+                    className="text-green-600 mx-auto mb-1"
+                  />
                   <span className="text-xs text-gray-600">Easy Returns</span>
                 </div>
               </div>
@@ -368,14 +411,20 @@ export default function ProductDetailPage() {
 
             {/* Product Description */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Product Description</h2>
-              <p className="text-gray-600 leading-relaxed">{product.description}</p>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Product Description
+              </h2>
+              <p className="text-gray-600 leading-relaxed">
+                {product.description}
+              </p>
             </div>
 
             {/* Key Ingredients */}
             {product.ingredients?.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Key Ingredients</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  Key Ingredients
+                </h2>
                 <div className="space-y-2">
                   {product.ingredients.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3 py-2">
@@ -390,11 +439,16 @@ export default function ProductDetailPage() {
             {/* Benefits */}
             {product.benefits?.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Benefits</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  Benefits
+                </h2>
                 <div className="space-y-2">
                   {product.benefits.map((item, idx) => (
                     <div key={idx} className="flex items-start gap-3 py-2">
-                      <Check size={16} className="text-green-500 mt-0.5 flex-shrink-0" />
+                      <Check
+                        size={16}
+                        className="text-green-500 mt-0.5 flex-shrink-0"
+                      />
                       <span className="text-gray-700">{item}</span>
                     </div>
                   ))}

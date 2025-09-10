@@ -1083,7 +1083,7 @@ const ProductListingPage = () => {
 
     return (
       <div
-        className={`fixed top-20 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl transform transition-all duration-500 ease-out bg-white border ${
+        className={` fixed top-20 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl transform transition-all duration-500 ease-out bg-white border ${
           type === "success"
             ? "border-green-200 shadow-green-100/50"
             : "border-red-200 shadow-red-100/50"
@@ -1112,7 +1112,7 @@ const ProductListingPage = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen mb-[482px]">
+    <div className="bg-gray-50 min-h-screen mb-[690px] sm:mb-[500px] md:mb-[490px] lg:mb-[400px] xl:mb-[180px] pb-10">
       {/* Header */}
       <div className="md:pt-30 bg-gradient-to-r bg-green-100 to-bg-green-300 text-green-600">
         <div className="container mx-auto text-center py-16 px-4">
@@ -1171,7 +1171,7 @@ const ProductListingPage = () => {
           </button>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex flex-col md:flex-row gap-8 ">
           {/* Desktop Filters */}
           <aside className="hidden md:block w-72 bg-white p-6 rounded-3xl shadow-sm sticky top-24 h-fit border border-gray-100">
             <div className="flex justify-between items-center mb-6">
@@ -1188,7 +1188,7 @@ const ProductListingPage = () => {
 
             {/* Search in desktop filters */}
             <div className="mb-6">
-              <div className="relative">
+              {/* <div className="relative">
                 <input
                   type="text"
                   placeholder="Search products..."
@@ -1197,7 +1197,7 @@ const ProductListingPage = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <FiSearch className="absolute right-3 top-2.5 text-gray-400" />
-              </div>
+              </div> */}
             </div>
 
             {/* Category Filter */}
@@ -1253,42 +1253,7 @@ const ProductListingPage = () => {
             </FilterSection>
 
             {/* Rating Filter */}
-            <FilterSection title="Customer Rating">
-              <div className="space-y-2 mt-3">
-                {[4, 3, 2, 1].map((rating) => (
-                  <div key={rating} className="flex items-center">
-                    <input
-                      type="radio"
-                      id={`rating-${rating}`}
-                      name="rating"
-                      checked={filters.rating === rating.toString()}
-                      onChange={() => handleRatingChange(rating.toString())}
-                      className="form-radio h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
-                    />
-                    <label
-                      htmlFor={`rating-${rating}`}
-                      className="ml-3 text-sm text-gray-700 flex items-center"
-                    >
-                      <div className="flex mr-2">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <FiStar
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < rating
-                                ? "text-yellow-400 fill-yellow-400"
-                                : "text-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      {rating > 0 && <span>& Up</span>}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </FilterSection>
           </aside>
-
           {/* Mobile Filters */}
           {showMobileFilters && (
             <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
@@ -1358,7 +1323,7 @@ const ProductListingPage = () => {
                 </FilterSection>
 
                 {/* Price Filter */}
-                <FilterSection title="Price Range">
+                <FilterSection title="Price Range ">
                   <div className="space-y-2 mt-3">
                     {priceRanges.map((range) => (
                       <div key={range.value} className="flex items-center">
@@ -1375,42 +1340,6 @@ const ProductListingPage = () => {
                           className="ml-3 text-sm text-gray-700"
                         >
                           {range.label}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </FilterSection>
-
-                {/* Rating Filter */}
-                <FilterSection title="Customer Rating">
-                  <div className="space-y-2 mt-3">
-                    {[4, 3, 2, 1].map((rating) => (
-                      <div key={rating} className="flex items-center">
-                        <input
-                          type="radio"
-                          id={`mob-rating-${rating}`}
-                          name="mob-rating"
-                          checked={filters.rating === rating.toString()}
-                          onChange={() => handleRatingChange(rating.toString())}
-                          className="form-radio h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
-                        />
-                        <label
-                          htmlFor={`mob-rating-${rating}`}
-                          className="ml-3 text-sm text-gray-700 flex items-center"
-                        >
-                          <div className="flex mr-2">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                              <FiStar
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < rating
-                                    ? "text-yellow-400 fill-yellow-400"
-                                    : "text-gray-300"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                          {rating > 0 && <span>& Up</span>}
                         </label>
                       </div>
                     ))}
@@ -1464,8 +1393,8 @@ const ProductListingPage = () => {
                     No products found
                   </h3>
                   <p className="text-gray-600 mb-6">
-                    Try adjusting your search or filters to find what you&apos;re
-                    looking for.
+                    Try adjusting your search or filters to find what
+                    you&apos;re looking for.
                   </p>
                   <button
                     onClick={clearAllFilters}
@@ -1690,7 +1619,7 @@ const ProductCard = ({
       className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 hover:border-green-100 relative group cursor-pointer"
       onClick={() => router.push(`/products/${product._id}`)}
     >
-      {/* Favorite Button */}
+      {/* Favorite Button
       <button
         onClick={(e) => onToggleFavorite(product._id, e)}
         className={`absolute top-3 right-3 z-10 p-2 rounded-full backdrop-blur-sm transition-all duration-300 ${
@@ -1700,7 +1629,7 @@ const ProductCard = ({
         } shadow-md hover:scale-110`}
       >
         <FiHeart size={18} className={isFavorite ? "fill-current" : ""} />
-      </button>
+      </button> */}
 
       {/* Product Image */}
       <div className="relative pt-[100%] bg-white">
@@ -1709,16 +1638,18 @@ const ProductCard = ({
           alt={product.productName}
           className="absolute top-0 left-0 w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300"
         />
-        {product.badge && (
-          <span className="absolute top-3 left-3 bg-green-500 text-white text-xs px-2 py-1 rounded">
-            {product.badge}
-          </span>
-        )}
-        {discountPercentage > 0 && (
-          <span className="absolute top-3 right-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
-            {discountPercentage}% OFF
-          </span>
-        )}
+        <div className="hidden sm:block">
+          {product.badge && (
+            <span className="absolute top-3 left-3 bg-green-500 text-white text-xs px-2 py-1 rounded">
+              {product.badge}
+            </span>
+          )}
+          {discountPercentage > 0 && (
+            <span className="absolute top-3 right-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
+              {discountPercentage}% OFF
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Product Info */}

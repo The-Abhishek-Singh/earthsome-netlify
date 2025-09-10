@@ -1109,7 +1109,7 @@ const MyOrdersPage = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center ">
         <div className="text-center bg-white p-8 rounded-2xl shadow-xl">
           <LoadingSpinner size="lg" />
           <p className="mt-4 text-green-600 font-medium">
