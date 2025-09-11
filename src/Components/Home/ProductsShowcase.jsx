@@ -209,7 +209,7 @@ const ComboProductsShowcase = () => {
                         )}
                       </div>
 
-                      <button
+                      {/* <button
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleFavorite(offer._id);
@@ -224,7 +224,7 @@ const ComboProductsShowcase = () => {
                               : "text-gray-400 hover:text-red-500"
                           } transition-colors duration-200`}
                         />
-                      </button>
+                      </button> */}
                     </div>
 
                     {/* Product Images Grid - Optimized */}

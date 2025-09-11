@@ -185,13 +185,13 @@ const BestSellers = () => {
     fetchBestSellers();
   }, []);
 
-  const toggleFavorite = (productId) => {
-    const newFavorites = new Set(favorites);
-    newFavorites.has(productId)
-      ? newFavorites.delete(productId)
-      : newFavorites.add(productId);
-    setFavorites(newFavorites);
-  };
+  // const toggleFavorite = (productId) => {
+  //   const newFavorites = new Set(favorites);
+  //   newFavorites.has(productId)
+  //     ? newFavorites.delete(productId)
+  //     : newFavorites.add(productId);
+  //   setFavorites(newFavorites);
+  // };
 
   const handleAddToCart = async (product, e) => {
     e.stopPropagation();
@@ -360,7 +360,7 @@ const BestSellers = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-green-50/0 to-green-50/0 group-hover:from-green-50/20 group-hover:to-transparent transition-all duration-300 rounded-2xl z-10"></div>
 
                   {/* Favorite Button */}
-                  <button
+                  {/* <button
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleFavorite(product._id);
@@ -375,7 +375,7 @@ const BestSellers = () => {
                           : "text-gray-400 hover:text-red-500"
                       } transition-colors duration-200`}
                     />
-                  </button>
+                  </button> */}
 
                   {/* Product Image with Badge */}
                   <div className="relative overflow-hidden">
@@ -425,12 +425,12 @@ const BestSellers = () => {
 
                     {/* Rating and description hidden on small screens */}
                     <div className="hidden md:block">
-                      <div className="mb-3">
+                      {/* <div className="mb-3">
                         <StarRating
                           rating={product.rating || 4}
                           reviews={product.reviewsCount || 0}
                         />
-                      </div>
+                      </div> */}
                       <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                         {product.description}
                       </p>
