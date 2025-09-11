@@ -70,6 +70,17 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "res-console.cloudinary.com",
+        pathname: "/**",
+      },
+
+      {
+        protocol: "https",
         hostname: "platform-lookaside.fbsbx.com", // ✅ For Facebook profile images
         pathname: "/**",
       },
