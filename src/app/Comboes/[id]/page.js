@@ -125,7 +125,7 @@ const ComboProductCard = ({ product }) => {
                 </>
               )}
             </div>
-            {product.rating && (
+            {/* {product.rating && (
               <div className="flex items-center gap-1 mt-1">
                 <Star size={12} className="text-yellow-400 fill-current" />
                 <span className="text-xs text-gray-600">{product.rating}</span>
@@ -135,7 +135,7 @@ const ComboProductCard = ({ product }) => {
                   </span>
                 )}
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
