@@ -17,6 +17,7 @@ const EarthsomeLogin = () => {
 
   const handleGoogleLogin = () => {
     signIn("google", { callbackUrl: `${window.location.origin}/` });
+    // signIn("google", { callbackUrl: `${window.location.origin}/` });
   };
 
   // Optionally show a loading spinner while redirecting
