@@ -15,7 +15,7 @@ const adminEmails = [
 
 // MongoDB connection for NextAuth
 const MONGODB_URI =
-  "mongodb+srv://Abhishek:Abhi1207302518@earthsome.0stadtf.mongodb.net/earthsome";
+  "mongodb+srv://Abhishek:Abhi1207302518@earthsome.0stadtf.mongodb.net/";
 const client = new MongoClient(MONGODB_URI);
 const clientPromise = client.connect();
 
@@ -33,6 +33,7 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user, account }) {
+      console.log("JWT callback called");
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -41,6 +42,7 @@ export const authOptions = {
       return token;
     },
     async session({ session, token, user }) {
+      console.log(`user: ${JSON.stringify(user)}`);
       // With database strategy, user object is available
       if (user) {
         session.user.id = user.id;
