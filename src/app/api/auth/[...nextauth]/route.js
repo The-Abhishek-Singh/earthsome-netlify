@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { MongoClient } from "mongodb";
+import jwt from "jsonwebtoken";
 
 const adminEmails = [
   "abhi120730@gmail.com",
@@ -10,13 +11,9 @@ const adminEmails = [
   "mayank@gomugomu.in",
   "varsanismit@gmail.com",
   "harsh.nextgenadvisory@gmail.com",
-  "earthsomemarketing@gmail.com",
 ];
 
-// MongoDB connection for NextAuth
-const MONGODB_URI =
-  "mongodb+srv://Abhishek:Abhi1207302518@earthsome.0stadtf.mongodb.net/";
-const client = new MongoClient(MONGODB_URI);
+const client = new MongoClient(process.env.MONGODB_URI);
 const clientPromise = client.connect();
 
 export const authOptions = {
@@ -31,9 +28,12 @@ export const authOptions = {
   pages: {
     signIn: "/Login",
   },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
+  },
   callbacks: {
-    async jwt({ token, user, account }) {
-      console.log("JWT callback called");
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -41,28 +41,23 @@ export const authOptions = {
       }
       return token;
     },
-    async session({ session, token, user }) {
-      console.log(`user: ${JSON.stringify(user)}`);
-      // With database strategy, user object is available
-      if (user) {
-        session.user.id = user.id;
-        session.user.email = user.email;
-        session.user.isAdmin = adminEmails.includes(user.email);
-      } else {
-        session.user.id = token.id;
-        session.user.email = token.email;
-        session.user.isAdmin = token.isAdmin;
+    async session({ session, token }) {
+      session.user.id = token.id;
+      session.user.email = token.email;
+      session.user.isAdmin = token.isAdmin;
+
+      session.backendToken = jwt.sign(
+        { id: token.id, email: token.email, isAdmin: token.isAdmin },
+        process.env.BACKEND_JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("adminToken", session.backendToken);
       }
+
       return session;
     },
-    async signIn({ user, account, profile }) {
-      // Always allow sign in for Google OAuth
-      return true;
-    },
-  },
-  session: {
-    strategy: "database",
-    maxAge: 30 * 24 * 60 * 60,
   },
 };
 

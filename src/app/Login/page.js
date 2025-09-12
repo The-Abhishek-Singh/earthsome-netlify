@@ -16,7 +16,6 @@ const EarthsomeLogin = () => {
   }, [status, router]);
 
   const handleGoogleLogin = () => {
-    // signIn("google", { callbackUrl: `${window.location.origin}/` });
     signIn("google", { callbackUrl: `${window.location.origin}/` });
   };
 
