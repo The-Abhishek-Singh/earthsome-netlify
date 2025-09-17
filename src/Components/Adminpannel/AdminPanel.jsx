@@ -811,6 +811,7 @@ const AdminPanel = () => {
         : [],
       description: formData.description,
     };
+console.log(payload);
 
     try {
       if (isEditing) {
